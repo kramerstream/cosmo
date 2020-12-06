@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when in, wrapper must be returned", proc()
+    const w = expected("two")
+    assert.strictEqual(w.toBeIn(["one", "two", "three"]), w)
+  end)
+
+  test("when not in, assertion error must be raised", proc()
+    assert.throws(proc() expected(0).toBeIn([1, 2, 3]) end)
+  end)
+end)

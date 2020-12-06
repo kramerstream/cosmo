@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when not like, wrapper must be returned", proc()
+    const w = expected("ciao mondo!")
+    assert.strictEqual(w.notToBeLike("AO"), w)
+  end)
+
+  test("when like, assertion error must be raised", proc()
+    assert.throws(proc() expected("ciao mondo!").notToBeLike("ao") end)
+  end)
+end)

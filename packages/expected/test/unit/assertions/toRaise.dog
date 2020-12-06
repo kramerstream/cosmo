@@ -1,0 +1,39 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  suite("when no error passed", proc()
+    test("when error raised, wrapper must be returned", proc()
+      const w = expected("bonjour")
+      assert.strictEqual(w.toRaise(), w)
+    end)
+
+    test("when error not raised, assertion error must be raised", proc()
+      assert.throws(proc() expected(nop).toRaise() end)
+    end)
+  end)
+
+  suite("when specific type passed", proc()
+    test("when error raised of the type, wrapper must be returned", proc()
+      const w = expected("bonjour")
+      assert.strictEqual(w.toRaise(TypeError), w)
+    end)
+
+    test("when error raised but not of the type, assertion error must be raised", proc()
+      assert.throws(proc() expected("bonjour").toRaise(SyntaxError) end)
+    end)
+  end)
+
+  suite("when specific error object passed", proc()
+    test("when error raised same as specific error, wrapper must be returned", proc()
+      const w = expected("bonjour")
+      assert.strictEqual(w.toRaise(TypeError("value is not a function")), w)
+    end)
+
+    test("when error raised but not specific error, assertion error must be raised", proc()
+      assert.throws(proc() expected("bonjour").toRaise(Error()) end)
+    end)
+  end)
+end)

@@ -1,0 +1,14 @@
+use (
+  alias:expected
+)
+
+export suite(__filename, proc()
+  test("when file isnt empty, wrapper must be returned", proc()
+    const w = expected.file(__filename)
+    expected(w.notToBeEmpty()).toBeSameAs(w)
+  end)
+
+  test("when file is empty, assertion error must be raised", proc()
+    expected(proc() expected.file(__dirname, "../../data/empty.txt").notToBeEmpty() end).toRaise()
+  end)
+end)

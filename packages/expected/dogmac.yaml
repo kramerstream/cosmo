@@ -1,0 +1,5 @@
+uses:
+  assert:
+    js: assert
+  path:
+    js: @dogmalang/path

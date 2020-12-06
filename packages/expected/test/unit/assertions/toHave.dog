@@ -1,0 +1,22 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when had, wrapper must be returned", proc()
+    const w = expected({x = 1, y = 2})
+
+    assert.strictEqual(w.toHave("x"), w)
+    assert.strictEqual(w.toHave(["x", "y"]), w)
+    assert.strictEqual(w.toHave(x = 1), w)
+  end)
+
+  test("when not had, assertion error must be raised", proc()
+    const w = expected({x = 1, y = 2})
+
+    assert.throws(proc() w.toHave("z") end)
+    assert.throws(proc() w.toHave(["x", "b"]) end)
+    assert.throws(proc() w.toHave(x = 2) end)
+  end)
+end)

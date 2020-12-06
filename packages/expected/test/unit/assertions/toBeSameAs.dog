@@ -1,0 +1,19 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when the same, wrapper must be returned", proc()
+    const (
+      obj = {}
+      w = expected(obj)
+    )
+
+    assert.strictEqual(w.toBeSameAs(obj), w)
+  end)
+
+  test("when not the same, assertion error must be raised", proc()
+    assert.throws(proc() expected({}).toBeSameAs({}) end)
+  end)
+end)

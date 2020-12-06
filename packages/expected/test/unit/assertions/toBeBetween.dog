@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when between, wrapper must be returned", proc()
+    const w = expected(1)
+    assert.strictEqual(w.toBeBetween(0, 2), w)
+  end)
+
+  test("when not between, assertion error must be raised", proc()
+    assert.throws(proc() expected(1).toBeBetween(2, 3) end)
+  end)
+end)

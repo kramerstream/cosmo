@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when map, wrapper must be returned", proc()
+    const w = expected({})
+    assert.strictEqual(w.toBeMap(), w)
+  end)
+
+  test("when not map, assertion error must be raised", proc()
+    assert.throws(proc() expected("{}").toBeMap() end)
+  end)
+end)

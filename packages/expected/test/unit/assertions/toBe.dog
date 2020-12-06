@@ -1,0 +1,16 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when value is instance of a given type, wrapper must be returned", proc()
+    const w = expected("ciao mondo!")
+    assert.strictEqual(w.toBe(text), w)
+  end)
+
+  test("when value is not instance of the given type, assertion error must be raised", proc()
+    assert.throws(proc() expected(123).toBe(text) end)
+    assert.throws(proc() expected(nil).toBe(text) end)
+  end)
+end)

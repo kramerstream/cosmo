@@ -1,0 +1,17 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "@dogmalang/core": "^1.0.0-rc12.0",
+    "lerna": "^3.22.1"
+  },
+  "scripts": {
+    "version": "node_modules/.bin/lerna -v",
+    "bootstrap": "node_modules/.bin/lerna clean -y && node_modules/.bin/lerna bootstrap && node_modules/.bin/lerna exec -- rm -rf node_modules/@dogmalang/core",
+    "update": "node_modules/.bin/lerna bootstrap && node_modules/.bin/lerna exec -- rm -rf node_modules/@dogmalang/core",
+    "build": "node_modules/.bin/lerna run build",
+    "test": "node_modules/.bin/lerna run test",
+    "cov": "node_modules/.bin/lerna run cov",
+    "publish": "node_modules/.bin/lerna publish"
+  }
+}

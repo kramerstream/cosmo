@@ -1,0 +1,16 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when greater than, wrapper must be returned", proc()
+    const w = expected(1)
+    assert.strictEqual(w.toBeGreaterThan(0), w)
+  end)
+
+  test("when not greater than, assertion error must be raised", proc()
+    assert.throws(proc() expected(1).toBeGreaterThan(1) end)
+    assert.throws(proc() expected(1).toBeGreaterThan(2) end)
+  end)
+end)

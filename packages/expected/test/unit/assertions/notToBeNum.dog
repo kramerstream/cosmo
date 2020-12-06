@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when not num, wrapper must be returned", proc()
+    const w = expected("0")
+    assert.strictEqual(w.notToBeNum(), w)
+  end)
+
+  test("when num, assertion error must be raised", proc()
+    assert.throws(proc() expected(0).notToBeNum() end)
+  end)
+end)

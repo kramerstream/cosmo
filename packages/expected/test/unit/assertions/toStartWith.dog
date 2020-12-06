@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when started with, wrapper must be returned", proc()
+    const w = expected("ciao mondo!")
+    assert.strictEqual(w.toStartWith("ciao"), w)
+  end)
+
+  test("when not started with, assertion error must be raised", proc()
+    assert.throws(proc() expected("ciao mondo!").toStartWith("CIAO") end)
+  end)
+end)

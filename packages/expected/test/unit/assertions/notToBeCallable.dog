@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when not callable, wrapper must be returned", proc()
+    const w = expected("")
+    assert.strictEqual(w.notToBeCallable(), w)
+  end)
+
+  test("when callable, assertion error must be raised", proc()
+    assert.throws(proc() expected(nop).notToBeCallable() end)
+  end)
+end)

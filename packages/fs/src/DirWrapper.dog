@@ -1,0 +1,48 @@
+use (
+  alias:path
+  alias:fs
+)
+
+/**
+ * A directory wrapper for asserting its content.
+ */
+export struct DirWrapper
+  /**
+   * The directory path.
+   */
+  @hidden @inject
+  pub const dirPath: text
+
+  /**
+   * Check whether the directory exists.
+   */
+  pub fn toExist() -> self
+    if not fs.isDir(dirPath) then
+      throw($"dir '${dirPath}' should exist.")
+
+  /**
+   * Check whether the directory doesn't exist.
+   */
+  pub fn notToExist() -> self
+    if fs.isDir(dirPath) then
+      throw($"dir '${dirPath}' should not exist.")
+
+  /**
+   * Check whether the directory has one or several [entries].
+   */
+  pub fn toHave(entries: list(text)) -> self
+    self.toExist()
+
+    for each e in entries do
+      if not fs.exists(path.join(dirPath, e)) then
+        throw($"dir '${dirPath}' should have entry '${e}'.")
+
+  /**
+   * Check whether the directory hasn't one or several [entries].
+   */
+  pub fn notToHave(entries: list(text)) -> self
+    self.toExist()
+
+    for each e in entries do
+      if fs.exists(path.join(dirPath, e)) then
+        throw($"dir '${dirPath}' should not have entry '${e}'.")

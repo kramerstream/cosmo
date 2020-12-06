@@ -1,0 +1,14 @@
+use (
+  alias:expected
+)
+
+export suite(__filename, proc()
+  test("when file is JSON, wrapper must be returned", proc()
+    const w = expected.file(__dirname, "../../../package.json")
+    expected(w.toBeJson()).toBeSameAs(w)
+  end)
+
+  test("when file isn't JSON, assertion error must be raised", proc()
+    expected(proc() expected.file(__filename).toBeJson() end).toRaise()
+  end)
+end)

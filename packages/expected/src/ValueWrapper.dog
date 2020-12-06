@@ -1,0 +1,479 @@
+use (
+  alias:assert
+)
+
+/**
+ * A wrapper for a value to perform assertions with it.
+ */
+@Self
+export struct ValueWrapper
+  /**
+   * The value to assert.
+   */
+  @hidden @inject
+  pub const value?
+
+  /**
+   * The original object, used when a wrapped created mem() from other wrapper.
+   */
+  @hidden
+  pub const originalValue?
+
+  /**
+   * When promise, it indicates if this was fulfilled.
+   */
+  @hidden
+  pub const fulfilled?: bool
+
+  /**
+   * Returns a wrapper for a [member] of the wrapped value.
+   */
+  @alias("it")
+  pub fn member(...args): Self
+    var (
+      root ::= self.originalValue ?? value
+      it = root
+    )
+
+    for each i in args do it = it[i]
+    return Self(value = it, originalValue = root)
+
+  /**
+   * Check whether the value raises a given [error].
+   */
+  pub fn toRaise(err?) -> self
+    if [ok, res] ::= peval(value()); ok then
+      throw("function should raise error.")
+    else if err then
+      if Type ::= err; Type is func then
+        if res is not Type then
+          throw($"'${value}' should raise of '${Type}'. Raised: '${res}'.")
+      else
+        if not peval(assert.deepEqual(res, err))[0] then
+          throw($"'${value}' should raise '${err}'. Raised: '${res}'.")
+
+  /**
+   * Check whether the value doesn't raise a given [error].
+   */
+  pub fn notToRaise(err?) -> self
+    if [ok, res] ::= peval(value()); not ok then
+      if not err then
+        throw("function should not raise error.")
+      else
+        if Type ::= err; Type is func then
+          if res is Type then
+            throw($"'${value}' should not raise of '${Type}'. Raised: '${res}'.")
+        else
+          if peval(assert.deepEqual(res, err))[0] then
+            throw($"'${value}' should not raise '${err}'. Raised: '${res}'.")
+
+  /**
+   * Check whether the value is an instance of a given [klass].
+   */
+  @alias("toBeInstanceOf")
+  pub fn toBe(klass) -> self
+    if value is not klass then
+      throw($"'{value}' should be instance of '${klass}'.")
+
+  /**
+   * Check whether the value is not instance of a given [klass].
+   */
+  @alias("notToBeInstanceOf")
+  pub fn notToBe(klass) -> self
+    if value is klass then
+      throw($"'${value}' should not be instance of '${klass}'.")
+
+  /**
+   * Check whether the value is null or nil.
+   */
+  @alias("toBeNull")
+  pub fn toBeNil() -> self
+    if value != nil then throw($"'${value}' should be nil/null.")
+
+  /**
+   * Check whether the value is not null or  nil.
+   */
+  @alias("notToBeNull")
+  pub fn notToBeNil() -> self
+    if value == nil then throw($"'${value}' should not be nil/null.")
+
+  /**
+   * Check whether the value is a boolean.
+   */
+  @alias("toBeBoolean")
+  pub fn toBeBool() -> self
+    if value is not bool then throw($"'${value}' should be a boolean.")
+
+  /**
+   * Check whether the value is not a boolean.
+   */
+  @alias("notToBeBoolean")
+  pub fn notToBeBool() -> self
+    if value is bool then throw($"'${value}' should not be a boolean.")
+
+  /**
+   * Check whether the value is a date.
+   */
+  @alias("toBeDate")
+  pub fn toBeTimestamp() -> self
+    if value is not timestamp then throw($"'${value}' should be a date.")
+
+  /**
+   * Check whether the value is not a date.
+   */
+  @alias("notToBeDate")
+  pub fn notToBeTimestamp() -> self
+    if value is timestamp then throw($"'${value}' should be a date.")
+
+  /**
+   * Check whether the value is a string or text.
+   */
+  @alias("toBeString")
+  pub fn toBeText() -> self
+    if value is not text then throw($"'${value}' should be a text or string.")
+
+  /**
+   * Check whether the value is not a string or text.
+   */
+  @alias("notToBeString")
+  pub fn notToBeText() -> self
+    if value is text then throw($"'${value}' should not be a text or string.")
+
+  /**
+   * Check whether the value is a number.
+   */
+  @alias("toBeNumber")
+  pub fn toBeNum() -> self
+    if value is not num then throw($"'${value}' should be a number.")
+
+  /**
+   * Check whether the value is not a number.
+   */
+  @alias("notToBeNumber")
+  pub fn notToBeNum() -> self
+    if value is num then throw($"'${value}' should not be a number.")
+
+  /**
+   * Check whether the value is an array or list.
+   */
+  @alias("toBeArray")
+  pub fn toBeList() -> self
+    if value is not list then throw($"'${value}' should be an array or list.")
+
+  /**
+   * Check whether the value is not an array or list.
+   */
+  @alias("notToBeArray")
+  pub fn notToBeList() -> self
+    if value is list then throw($"'${value}' should not be an array or list.")
+
+  /**
+   * Check whether the value is a set.
+   */
+  pub fn toBeSet() -> self
+    if value is not set then throw($"'${value}' should be a set.")
+
+  /**
+   * Check whether the value is not a set.
+   */
+  pub fn notToBeSet() -> self
+    if value is set then throw($"'${value}' should not be a set.")
+
+  /**
+   * Check whether the value is an object or map.
+   */
+  @alias("toBeObject")
+  pub fn toBeMap() -> self
+    if value is not map then throw($"'${value}' should not be an object or map.")
+
+  /**
+   * Check whether the value is not an object or map.
+   */
+  @alias("notToBeObject")
+  pub fn notToBeMap() -> self
+    if value is map then throw($"'${value}' should not be an object or map.")
+
+  /**
+   * Check whether the value is a function.
+   */
+  @alias("toBeFunction")
+  pub fn toBeFn() -> self
+    if value is not func then throw($"'${value}' should be a function.")
+
+  /**
+   * Check whether the value is not a function.
+   */
+  @alias("notToBeFunction")
+  pub fn notToBeFn() -> self
+    if value is func then throw($"'${value}' should not be a function.")
+
+  /**
+   * Check whether the value is callable.
+   */
+  pub fn toBeCallable() -> self
+    if value is not func then throw($"'${value}' should be callable.")
+
+  /**
+   * Check whether the value is not callable.
+   */
+  pub fn notToBeCallable() -> self
+    if value is func then throw($"'${value}' should not be callable.")
+
+  /**
+   * Check whether the value is equal to [another].
+   */
+  pub fn toBeEqualTo(another?) -> self
+    if typename(value) != typename(another) or not peval(assert.deepEqual(value, another))[0] then
+      throw($"'${fmt(value)}' should be equal to '${fmt(another)}'.")
+
+  /**
+   * Check whether the value is not equal to [another].
+   */
+  pub fn notToBeEqualTo(another?) -> self
+    if typename(value) == typename(another) and peval(assert.deepEqual(value, another))[0] then
+      throw($"'${fmt(value)}' should not be equal to '${fmt(another)}'.")
+
+  /**
+   * Check whether the value is the same as [another].
+   */
+  pub fn toBeSameAs(another?) -> self
+    if value !== another then throw($"'${fmt(value)}' should be same as '${fmt(another)}'.")
+
+  /**
+   * Check whether the value is not the same as [another].
+   */
+  pub fn notToBeSameAs(another?) -> self
+    if value === another then throw($"'${fmt(value)}' should not be same as '${fmt(another)}'.")
+
+  /**
+   * Check whether the value is less than [another].
+   */
+  @alias("toBeLt")
+  pub fn toBeLessThan(another) -> self
+    if typename(value) != typename(another) or value >= another then
+      throw($"'${value}' should be less than '${another}'.")
+
+  /**
+   * Check whether the value is less than or equal to [another].
+   */
+  @alias("toBeLe")
+  pub fn toBeLessThanOrEqualTo(another) -> self
+    if typename(value) != typename(another) or value > another then
+      throw($"'${value}' should be less than or equal to '${another}'.")
+
+  /**
+   * Check whether the value is greater than or equal to [another].
+   */
+  @alias("toBeGt")
+  pub fn toBeGreaterThan(another) -> self
+    if typename(value) != typename(another) or typename(value) in ["bool"] or value <= another then
+      throw($"'${value}' should be greater than '${another}'.")
+
+  /**
+   * Check whether the value is greater than or equal to [another].
+   */
+  @alias("toBeGe")
+  pub fn toBeGreaterThanOrEqualTo(another) -> self
+    if typename(value) != typename(another) or typename(value) in ["bool"] or value < another then
+      throw($"'${value}' should be greater than or equal to '${another}'.")
+
+  /**
+   * Check whether the value is between two values.
+   */
+  pub fn toBeBetween(val1?, val2?) -> self
+    if typename(value) != typename(val1) or typename(value) != typename(val2) or value < val1 or value > val2 then
+      throw($"'${value}' should be between '${val1}' and '${val2}'.")
+
+  /**
+   * Check whether the value is not between two values.
+   */
+  pub fn notToBeBetween(val1?, val2?) -> self
+    if typename(value) == typename(val1) and typename(value) == typename(val2) and value >= val1 and value <= val2 then
+      throw($"'${value}' should not be between '${val1}' and '${val2}'.")
+
+  /**
+   * Check whether the value includes one [item].
+   */
+  @alias("toContain")
+  pub fn toInclude(item?) -> self
+    if [ok, res] ::= peval(value.includes(item)); not ok or not res then
+      throw($"'${value}' should include '${item}'.")
+
+  /**
+   * Check whether the value doesn't include one [item].
+   */
+  @alias("notToContain")
+  pub fn notToInclude(item?) -> self
+    if [ok, res] ::= peval(value.includes(item)); ok and res then
+      throw($"'${value}' should not include '${item}'.")
+
+  /**
+   * Check whether the value is into [another].
+   */
+  pub fn toBeIn(another: list) -> self
+    if not another.includes(value) then
+      throw($"'{fmt(value)}' should be in '${fmt(another)}'")
+
+  /**
+   * Check whether the value is not into [another].
+   */
+  pub fn notToBeIn(another: list) -> self
+    if another.includes(value) then
+      throw($"'{fmt(value)}' should not be in '${fmt(another)}'")
+
+  /**
+   * Check whether the value has one or several [members].
+   */
+  pub fn toHave(members: (text, list, map)) -> self
+    #(1) arguments
+    if members is not [list, map] then members = [members]
+
+    #(2) check
+    if members is list then
+      for each mem in members do
+        if value[mem] == nil then
+          throw($"'${fmt(value)}' should have '${mem}'.")
+    else
+      for each mem, val in members do
+        if [ok, received] ::= peval(assert.deepEqual(value[mem], val)); not ok then
+          throw($"'${fmt(value)}' should have '${mem}' to '${fmt(val)}'. Received: ${received}.")
+
+  /**
+   * Check whether the value doesn't have one or several [members].
+   */
+  pub fn notToHave(members: (text, list, map)) -> self
+    #(1) arguments
+    if members is not [list, map] then members = [members]
+
+    #(2) check
+    if members is list then
+      for each mem in members do
+        if value[mem] !== undefined then throw($"${fmt(value)} should not have '${mem}'.")
+    else
+      for each mem, val in members do
+        if received ::= value[mem]; received == val then
+          throw($"${fmt(value)} should not have '${mem}' to '${val}'. Received: '${received}'.")
+
+  /**
+   * Check whether the value is similar to [another].
+   */
+  pub fn toBeSimilarTo(another) -> self
+    if not similar(value, another) then
+      throw($"'${fmt(value)}' should be similar to '${fmt(another)}'.")
+
+  /**
+   * Check whether the value is not similar to [another].
+   */
+  pub fn notToBeSimilarTo(another) -> self
+    if similar(value, another) then
+      throw($"'${fmt(value)}' should not be similar to '${fmt(another)}'.")
+
+  /**
+   * Check whether the value is empty, that is, length is 0 or empty string.
+   */
+  pub fn toBeEmpty() -> self
+    if len(value) != 0 then
+      throw($"'${value}' should be empty.")
+
+  /**
+   * Check whether the value is not empty, that is, it has items.
+   */
+  pub fn notToBeEmpty() -> self
+    if typename(value) in ["bool", "num"] or len(value) == 0 then
+      throw($"'${value}' should not be empty.")
+
+  /**
+   * Check whether the value has a given length.
+   */
+  @alias("toHaveLen")
+  pub fn toHaveLength(size: (num,list)) -> self
+    if received ::= len(value); received != size then
+      throw($"${fmt(value)} length should have length '${size}'. Received: ${received}.")
+
+  /**
+   * Check whether the value has not a given length.
+   */
+  @alias("notToHaveLen")
+  pub fn notToHaveLength(size: num) -> self
+    if received ::= len(value); received == size then
+      throw($"${fmt(value)} length should not have length '${size}'. Received: ${received}.")
+
+  /**
+   * Check whether the value matches a given pattern.
+   */
+  @alias("toMatch")
+  pub fn toBeLike(pattern: text) -> self
+    if not re(pattern).test(value) then
+      throw($"'${value}' should be like '${pattern}'.")
+
+  /**
+   * Check whether the value does not match a given [pattern].
+   */
+  @alias("notToMatch")
+  pub fn notToBeLike(pattern: text) -> self
+    if re(pattern).test(value) then
+      throw($"'${value}' should not be like '${pattern}'.")
+
+
+  /**
+   * Check whether the value starts with a given [prefix].
+   */
+  pub fn toStartWith(prefix: text) -> self
+    if not text(value).startsWith(prefix) then
+      throw($"'${value}' should start with '${prefix}'.")
+
+  /**
+   * Check whether the value doesn't start with a given [prefix].
+   */
+  pub fn notToStartWith(prefix: text) -> self
+    if text(value).startsWith(prefix) then
+      throw($"'${value}' should not start with '${prefix}'.")
+
+  /**
+   * Check whether the value ends with a given [suffix].
+   */
+  pub fn toEndWith(suffix: text) -> self
+    if not text(value).endsWith(suffix) then
+      throw($"'${value}' should end with '${suffix}'.")
+
+  /**
+   * Check whether the value doesn't end with a given [suffix].
+   */
+  pub fn notToEndWith(suffix: text) -> self
+    if text(value).endsWith(suffix) then
+      throw($"'${value}' should not end with '${suffix}'.")
+
+  /**
+   * Check whether the promised value has been fulfilled.
+   */
+  @alias("toHaveBeenFulfilled")
+  pub fn toBeFulfilled() -> self
+    if self.fulfilled !== true then
+      throw($"${value} should have been fulfilled.")
+
+  /**
+   * Check whether the promised value has been rejected.
+   */
+  @alias("toHaveBeenRejected")
+  pub fn toBeRejected() -> self
+    if self.fulfilled !== false then
+      throw($"${value} should have been rejected.")
+
+/**
+ * Check whether two arrays are similar, that is, the same items in any order.
+ */
+fn similar(arr1, arr2) -> res: bool
+  if len(arr1) != len(arr2) then
+    res = false
+  else
+    if len(arr1) == 0 and len(arr2) == 0 then  #special case
+      res = true
+    else
+      for each i in arr1 do
+        res = false
+
+        for each j in arr2 do
+          [res] = peval(assert.deepEqual(i, j))
+          if res then break
+
+        if not res then break

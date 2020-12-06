@@ -1,0 +1,15 @@
+use (
+  alias:expected
+)
+
+export suite(__filename, proc()
+  test("when file includes content, wrapper must be returned", proc()
+    const w = expected.file(__filename)
+    expected(w.toInclude("toInclude")).toBeSameAs(w)
+    expected(w.toInclude(["test", "toInclude"])).toBeSameAs(w)
+  end)
+
+  test("when file doesn't include, assertion error must be raised", proc()
+    expected(proc() expected.file(__dirname, "toExist.js").toInclude("xyz") end).toRaise()
+  end)
+end)

@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when not list, wrapper must be returned", proc()
+    const w = expected("[]")
+    assert.strictEqual(w.notToBeList(), w)
+  end)
+
+  test("when list, assertion error must be raised", proc()
+    assert.throws(proc() expected([]).notToBeList() end)
+  end)
+end)

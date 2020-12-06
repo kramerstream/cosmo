@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when bool, wrapper must be returned", proc()
+    const w = expected(true)
+    assert.strictEqual(w.toBeBool(), w)
+  end)
+
+  test("when not bool, assertion error must be raised", proc()
+    assert.throws(proc() expected("true").toBeBool() end)
+  end)
+end)

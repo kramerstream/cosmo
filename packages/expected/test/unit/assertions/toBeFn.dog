@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when fn, wrapper must be returned", proc()
+    const w = expected(nop)
+    assert.strictEqual(w.toBeFn(), w)
+  end)
+
+  test("when not fn, assertion error must be raised", proc()
+    assert.throws(proc() expected("() => {}").toBeFn() end)
+  end)
+end)

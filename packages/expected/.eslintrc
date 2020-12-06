@@ -1,0 +1,38 @@
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion":  8,
+    "sourceType": "module"
+  },
+  "rules": {
+    "getter-return": "warn",
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "no-cond-assign": "warn",
+    "no-console": "warn",
+    "no-empty": "warn",
+    "no-unused-vars": "warn",
+    "quotes": [
+      "off",
+      "double",
+      {"allowTemplateLiterals": true}
+    ],
+    "semi": [
+      "error",
+      "always"
+    ]
+  }
+}

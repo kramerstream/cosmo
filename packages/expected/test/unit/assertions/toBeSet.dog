@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when set, wrapper must be returned", proc()
+    const w = expected(set())
+    assert.strictEqual(w.toBeSet(), w)
+  end)
+
+  test("when not set, assertion error must be raised", proc()
+    assert.throws(proc() expected("[]").toBeSet() end)
+  end)
+end)

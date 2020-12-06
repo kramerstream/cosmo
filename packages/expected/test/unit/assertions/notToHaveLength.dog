@@ -1,0 +1,16 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when not length, wrapper must be returned", proc()
+    const w = expected({x = 1, y = 2})
+
+    assert.strictEqual(w.notToHaveLength(1), w)
+  end)
+
+  test("when length, assertion error must be raised", proc()
+    assert.throws(proc() expected({x = 1, y = 2}).notToHaveLength(2) end)
+  end)
+end)

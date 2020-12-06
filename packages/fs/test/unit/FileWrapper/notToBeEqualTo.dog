@@ -1,0 +1,15 @@
+use (
+  alias:expected
+  alias:fs
+)
+
+export suite(__filename, proc()
+  test("when not equal to another, wrapper must be returned", proc()
+    const w = expected.file(__filename)
+    expected(w.notToBeEqualTo("content")).toBeSameAs(w)
+  end)
+
+  test("when equal to another, assertion error must be raised", proc()
+    expected(proc() expected.file(__filename).notToBeEqualTo(fs.read(__filename)) end).toRaise()
+  end)
+end)

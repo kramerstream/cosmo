@@ -1,0 +1,27 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when empty list, wrapper must be returned", proc()
+    const w = expected([])
+    assert.strictEqual(w.toBeEmpty(), w)
+  end)
+
+  test("when empty text, wrapper must be returned", proc()
+    const w = expected("")
+    assert.strictEqual(w.toBeEmpty(), w)
+  end)
+
+  test("when empty map, wrapper must be returned", proc()
+    const w = expected({})
+    assert.strictEqual(w.toBeEmpty(), w)
+  end)
+
+  test("when not empty, assertion error must be raised", proc()
+    assert.throws(proc() expected("[]").toBeEmpty() end)
+    assert.throws(proc() expected([1]).toBeEmpty() end)
+    assert.throws(proc() expected({x = 1}).toBeEmpty() end)
+  end)
+end)

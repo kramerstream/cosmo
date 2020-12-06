@@ -1,0 +1,15 @@
+use (
+  alias:expected
+  alias:path
+)
+
+export suite(__filename, proc()
+  test("when file isn't equal to another, wrapper must be returned", proc()
+    const w = expected.file(__filename)
+    expected(w.notToBeEqualToFile(path.join(__dirname, "notToBeEqualTo.js"))).toBeSameAs(w)
+  end)
+
+  test("when file is equal to another, assertion error must be raised", proc()
+    expected(proc() expected.file(__filename).notToBeEqualToFile(__filename) end).toRaise()
+  end)
+end)

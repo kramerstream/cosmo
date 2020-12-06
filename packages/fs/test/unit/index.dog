@@ -1,0 +1,10 @@
+use (
+  pkg = ~
+  alias:expected
+)
+
+export suite(__filename, proc()
+  test("when imported, name and members returned", proc()
+    expected(pkg).member("name").toInclude("fs").member("members").toHave("file").toHave("dir")
+  end)
+end)

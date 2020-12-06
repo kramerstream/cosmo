@@ -1,0 +1,14 @@
+use (
+  alias:expected
+)
+
+export suite(__filename, proc()
+  test("when file doesn't exist, wrapper must be returned", proc()
+    const w = expected.file("unknown")
+    expected(w.notToExist()).toBeSameAs(w)
+  end)
+
+  test("when file exists, assertion error must be raised", proc()
+    expected(proc() expected.file(__filename).notToExist() end).toRaise()
+  end)
+end)

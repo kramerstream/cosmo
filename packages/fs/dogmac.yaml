@@ -1,0 +1,9 @@
+uses:
+  assert:
+    js: assert
+  expected:
+    js: @kramertest/expected
+  fs:
+    js: @dogmalang/fs.sync
+  path:
+    js: @dogmalang/path

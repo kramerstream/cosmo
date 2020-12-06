@@ -1,0 +1,14 @@
+use (
+  alias:expected
+)
+
+export suite(__filename, proc()
+  test("when file starts with given prefix, wrapper must be returned", proc()
+    const w = expected.file(__dirname, "../../../package.json")
+    expected(w.toStartWith("{")).toBeSameAs(w)
+  end)
+
+  test("when file doesn't start with given prefix, assertion error must be raised", proc()
+    expected(proc() expected.file(__filename).toStartWith("xyz") end).toRaise()
+  end)
+end)

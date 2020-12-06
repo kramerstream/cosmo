@@ -1,0 +1,14 @@
+use (
+  alias:expected
+)
+
+export suite(__filename, proc()
+  test("when dir exists, wrapper must be returned", proc()
+    const w = expected.dir(__dirname)
+    expected(w.toExist()).toBeSameAs(w)
+  end)
+
+  test("when dir doesn't exist, assertion error must be raised", proc()
+    expected(proc() expected.dir("unknown").toExist() end).toRaise()
+  end)
+end)

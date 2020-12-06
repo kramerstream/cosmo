@@ -1,0 +1,15 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when not date, wrapper must be returned", proc()
+    const w = expected("timestamp()")
+    assert.strictEqual(w.notToBeTimestamp(), w)
+  end)
+
+  test("when date, assertion error must be raised", proc()
+    assert.throws(proc() expected(timestamp()).notToBeTimestamp() end)
+  end)
+end)
