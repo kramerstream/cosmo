@@ -10,7 +10,7 @@ const {
 
 const expected = _core.dogma.use(require("../.."));
 
-module.exports = exports = suite.only(__filename, () => {
+module.exports = exports = suite(__filename, () => {
   {
     test("api must export a function", () => {
       {

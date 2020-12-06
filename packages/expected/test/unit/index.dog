@@ -4,7 +4,7 @@ use (
   expected = ~
 )
 
-export suite.only(__filename, proc()
+export suite(__filename, proc()
   test("api must export a function", proc()
     assert.typeOf(expected, "function")
   end)

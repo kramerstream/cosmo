@@ -4,7 +4,7 @@ var _core = require("@dogmalang/core");
 
 const ValueWrapper = _core.dogma.use(require("./ValueWrapper"));
 
-function should(value) {
+function expected(value) {
   let wrapper;
   {
     if (_core.dogma.isNot(value, _core.promise)) {
@@ -43,10 +43,10 @@ function should(value) {
   return wrapper;
 }
 
-module.exports = exports = should;
+module.exports = exports = expected;
 const plugins = {};
 
-should.plugin = plugin => {
+expected.plugin = plugin => {
   /* istanbul ignore next */
   _core.dogma.expect("plugin", plugin, [_core.text, _core.map]);
 
@@ -61,12 +61,12 @@ should.plugin = plugin => {
       for (const [key, val] of Object.entries(plugin.members)) {
         {
           if (key != "plugin") {
-            _core.dogma.setItem("=", should, key, val);
+            _core.dogma.setItem("=", expected, key, val);
           }
         }
       }
     }
 
-    return should;
+    return expected;
   }
 };
