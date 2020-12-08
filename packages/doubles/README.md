@@ -1,7 +1,7 @@
-# @kramertest/doubles
+# @kramertest/cosmo-doubles
 
-[![NPM version](https://img.shields.io/npm/v/@kramertest/doubles.svg)](https://npmjs.org/package/@kramertest/doubles)
-[![Total downloads](https://img.shields.io/npm/dt/@kramertest/doubles.svg)](https://npmjs.org/package/@kramertest/doubles)
+[![NPM version](https://img.shields.io/npm/v/@kramertest/cosmo-doubles.svg)](https://npmjs.org/package/@kramertest/cosmo-doubles)
+[![Total downloads](https://img.shields.io/npm/dt/@kramertest/cosmo-doubles.svg)](https://npmjs.org/package/@kramertest/cosmo-doubles)
 
 Doubles library to simulate objects.
 
@@ -20,7 +20,7 @@ We can use the monitor as the object being monitored.
 We can create a monitor for an object as follows:
 
 ```javascript
-const {monitor} = require("@kramertest/doubles");
+const {monitor} = require("@kramertest/cosmo-doubles");
 const object = {/* ... */};
 
 //monitor all: field accesses and calls
@@ -60,7 +60,7 @@ We can use the monitor as the function object being monitored.
 We can create a monitor for a function object as follows:
 
 ```javascript
-const {monitor} = require("@kramertest/doubles");
+const {monitor} = require("@kramertest/cosmo-doubles");
 function fn(/*...*/) { /* ... */ }
 
 //monitor function calls
