@@ -1,0 +1,10 @@
+use (
+  alias:expected
+  api = ~
+)
+
+export suite(__filename, proc()
+  test("api must export functions", proc()
+    expected(api).member("monitor").toBeFn()
+  end)
+end)

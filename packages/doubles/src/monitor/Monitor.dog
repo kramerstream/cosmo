@@ -1,0 +1,42 @@
+use (
+  ../Double
+  log/Log
+)
+
+/**
+ * A monitor, that is, a proxy to save the accesses to other object.
+ */
+export struct Monitor: Double
+  /**
+   * The log to use for saving the accesses.
+   */
+  @inject
+  pub const log: Log
+
+  /**
+   * The object under supervision.
+   */
+  pub const target
+
+  /**
+   * The members under supervision.
+   */
+  @inject
+  pub const members: text[]
+
+  /**
+   * Check whether a member is monitorable.
+   */
+  pub fn hasToBeMonitorized(name: text) = len(members) == 0 or name in members
+
+  /**
+   * Saves a call.
+   */
+  pub fn saveCall(...args) -> self
+    log.saveCall(...args)
+
+  /**
+   * Saves a field access in the log.
+   */
+  pub fn saveAccess(...args) -> self
+    log.saveAccess(...args)

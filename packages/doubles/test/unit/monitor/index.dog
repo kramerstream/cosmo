@@ -1,0 +1,57 @@
+use (
+  alias:expected
+  {monitor} = ~
+)
+
+export suite(__filename, proc()
+  suite("monitor()", proc()
+    teardown("Clear monitors created")
+
+    test("when monitor created, monitors must contain monitor info", proc()
+      const target = {}
+
+      #(1) act
+      const p = monitor(target)
+
+      #(2) assert
+      expected(p).notToBeSameAs(target)
+      expected(monitor.monitors).toHaveLen(1).it(0, "proxy").toBeSameAs(p)
+    end)
+  end)
+
+  suite("monitor.log()", proc()
+    fin("Clear monitors created")
+
+    test("when proxy not saved, nil must be returned", proc()
+      monitor({})
+      expected(monitor.log(proxy({}, {}))).toBeNil()
+    end)
+
+    test("when proxy saved, log must be returned", proc()
+      const p = monitor({})
+      expected(monitor.log(p)).toBe("Log")
+    end)
+  end)
+
+  suite("monitor.clear()", proc()
+    teardown("Clear monitors created")
+
+    test("when proxy saved, clear must be performed", proc()
+      #(1) act
+      const p = monitor({})
+      monitor.clear(p)
+
+      #(2) assert
+      expected(monitor.monitors).toBeEmpty(0)
+    end)
+
+    test("when proxy not saved, no clear performed and mustn't be raised error", proc()
+      #(1) act
+      const p = monitor({})
+      monitor.clear(proxy({}, {}))
+
+      #(2) assert
+      expected(monitor.monitors).toHaveLen(1).it(0, "proxy").toBeSameAs(p)
+    end)
+  end)
+end)
