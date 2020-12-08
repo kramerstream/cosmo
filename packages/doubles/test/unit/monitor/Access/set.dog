@@ -1,0 +1,107 @@
+use (
+  alias:expected
+  {monitor} = ~
+  ~/lib/monitor/Result
+  ~/lib/monitor/log/AccessKind
+)
+
+export suite(__filename, proc()
+  teardown("Clear monitors created")
+
+  test.only("when no error raised, log must be updated and value returned", proc()
+    const target = {x = 11, y = 22}
+
+    #(1) act
+    const p = monitor(target)
+    expected(p.x = 123).toBeEqualTo(123)
+    expected(p.x).toBeEqualTo(123)
+
+    #(2) assert
+    const log = monitor.log(p)
+    expected(log).toHaveLen(2)
+    expected(log.items).it(0).toHave(member = "x").it(1).toHave(member = "x")
+    expected(log.returnedType(num)).toBeEqualTo(2)
+
+    var access = log.getEntry(0)
+    expected(access.isSet()).toBeEqualTo(true)
+    expected(access).toBe("Access").toHave(
+      value = 123
+      result = Result.RETURN
+      member = "x"
+      kind = AccessKind.SET
+    )
+
+    access = log.getEntry(1)
+    expected(access.isGet()).toBeEqualTo(true)
+    expected(access).toBe("Access").toHave(
+      value = 123
+      result = Result.RETURN
+      member = "x"
+      kind = AccessKind.GET
+    )
+  end)
+
+  test("when error raised, log must be updated and the error raised", proc()
+    struct Point2D
+      pub const x
+      pub const y
+      @hidden
+      pub var value = 33
+
+    const target = Point2D(x = 11, y = 22)
+    Object.defineProperty(target, "z", {
+      enumerable = true
+      get = fn() = target.value end
+      set = fn() = throw("my error") end
+    })
+
+    #(1) act
+    const p = monitor(target)
+    expected(p).toBe(Point2D)
+    expected(p.x).toBeEqualTo(11)
+    expected(p.y).toBeEqualTo(22)
+    expected(p.z).toBeEqualTo(33)
+    expected(proc() p.z = 123 end).toRaise("my error")
+
+    #(2) assert
+    const log = monitor.log(p)
+    expected(log).toHaveLen(4).member("accesses").toBeEqualTo(4)
+    expected(log.items).it(0).toHave(member = "x").it(1).toHave(member = "y").it(2).toHave(member = "z").it(3).toHave(member = "z")
+    expected(log).member("returns").toBeEqualTo(3).member("raises").toBeEqualTo(1)
+    for each i in [0, 1, 2] do expected(log.getEntry(i).isGet()).toBeEqualTo(true)
+
+    const access = log.getEntry(3)
+    expected(access.isSet()).toBeEqualTo(true)
+    expected(access.raisedValue("my error")).toBeEqualTo(true)
+    expected(access.raisedType(text)).toBeEqualTo(true)
+  end)
+
+  test("when given fields, only these fields must be monitored", proc()
+    const target = {x = 1, y = 2, z = 3}
+
+    #(1) act
+    const p = monitor(target, members = ["x", "z"])
+    expected(p.x = 11).toBeEqualTo(11)
+    expected(p.y = 22).toBeEqualTo(22)
+    expected(p.z = 33).toBeEqualTo(33)
+
+    #(2) assert
+    const log = monitor.log(p)
+    expected(log).toHaveLen(2)
+    expected(log.items).it(0).toHave(member = "x").it(1).toHave(member = "z")
+  end)
+
+  test("when onlyCalls, nothing must be monitored when set", proc()
+    const target = {x = 1, y = 2, z = 3}
+
+    #(1) act
+    const p = monitor(target, onlyCalls = true)
+    expected(p.x = 11).toBeEqualTo(11)
+    expected(p.y = 22).toBeEqualTo(22)
+    expected(p.z = 33).toBeEqualTo(33)
+
+    #(2) assert
+    const log = monitor.log(p)
+    expected(log).toHaveLen(0)
+  end)
+end)

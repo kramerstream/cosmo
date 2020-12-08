@@ -150,6 +150,8 @@ When `getEntry()`, `getCall()` or `getAccess()` used, the instances returned are
   returnedType(Type) | boolean | Is the returned value of the given type?
   raisedValue(value) | boolean | Was the given value raised?
   raisedType(Type) | boolean | Is the raised value of the given type?
+  isGet() | boolean | Is a read access?
+  isSet() | boolean | Is a write access?
 
 - `Call`, representing a function/method call:
 
