@@ -2,7 +2,7 @@
 
 var _core = require("@dogmalang/core");
 
-const expected = _core.dogma.use(require("@kramertest/expected"));
+const expected = _core.dogma.use(require("@kramertest/cosmo-expected"));
 
 const fs = _core.dogma.use(require("@dogmalang/fs.sync"));
 

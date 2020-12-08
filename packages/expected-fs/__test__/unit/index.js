@@ -4,7 +4,7 @@ var _core = require("@dogmalang/core");
 
 const pkg = _core.dogma.use(require("../.."));
 
-const expected = _core.dogma.use(require("@kramertest/expected"));
+const expected = _core.dogma.use(require("@kramertest/cosmo-expected"));
 
 module.exports = exports = suite(__filename, () => {
   {

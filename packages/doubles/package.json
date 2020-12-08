@@ -1,5 +1,5 @@
 {
-  "name": "@kramertest/doubles-monitor",
+  "name": "@kramertest/cosmo-doubles",
   "version": "0.1.0",
   "description": "Test doubles library.",
   "homepage": "http://kramer.stream",
@@ -48,7 +48,7 @@
     "@ethronpi/exec": "^0.2.0",
     "@ethronpi/fs": "^0.3.0",
     "@ethronpi/npm": "^0.3.0",
-    "@kramertest/expected": "^0.1.0",
+    "@kramertest/cosmo-expected": "^0.1.0",
     "eslint": "^7.14.0",
     "nyc": "^15.1.0"
   },
