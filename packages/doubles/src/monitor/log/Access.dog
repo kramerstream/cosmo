@@ -1,0 +1,18 @@
+use (
+  Entry
+  AccessKind
+)
+
+/**
+ * A member access.
+ */
+export struct Access: Entry
+  /**
+   * The member name.
+   */
+  pub const member
+
+  /**
+   * The kind of access.
+   */
+  pub const kind: AccessKind

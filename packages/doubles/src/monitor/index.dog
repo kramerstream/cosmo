@@ -1,0 +1,121 @@
+use (
+  Monitor
+  Result
+  log/Log
+  log/AccessKind
+)
+
+/**
+ * The current monitors.
+ */
+const monitors = []
+
+/**
+ * Creates a monitor to supervise an [object].
+
+ * [opts] contains the options:
+ * - members, a list with the members to monitor. If not set, all monitored.
+ * - onlyCalls, true when only to monitor member functions.
+ */
+export fn monitor(object, opts?: map) = createMonitor(object, opts{*, -log})
+
+/**
+ * Create a monitor for [object].
+ *
+ * [opts] contains the options:
+ * - members, a list with the members to monitor. If not set, all monitored.
+ * - onlyCalls, true when only to monitor member functions.
+ * - log, the log to use.
+ */
+fn createMonitor(object, opts: map) -> p
+  #(1) create monitor
+  const m = Monitor(
+    target = object
+    log = opts.log ?? Log()
+    members = opts.members ?? []
+  )
+
+  p = proxy(object, {
+    #monitor the calls.
+    apply = fn(target, thisArg?, args)
+      #(1) invoke call
+      var result, value
+
+      do
+        value = target(...args)
+        result = Result.RETURN
+      catch e
+        value = e
+        result = Result.THROW
+
+      #(2) save call
+      m.saveCall(target=, args, result, value)
+
+      #(3) return or throw
+      if result ==~ THROW then throw(value)
+      return value
+    end
+
+    #monitor a read access to a member.
+    get = fn(target, member, receiver)
+      #(1) pre
+      if not m.hasToBeMonitorized(member) then return target[member]
+
+      #(2) invoke property
+      var result, value
+
+      do
+        value = target[member]
+        result = Result.RETURN
+      catch e
+        value = e
+        result = Result.THROW
+
+      #(3) save access
+      if not opts.onlyCalls then
+        m.saveAccess(target=, member, kind = AccessKind.GET, result, value)
+
+      #(4) return or throw
+      if result ==~ THROW then throw(value)
+      else if value is func then return createMonitor(value, log = m.log)
+      else return value
+    end
+  })
+
+  #(2) save monitor
+  monitors.push(proxy = p, monitor = m)
+
+/**
+ * The current monitors.
+ */
+Object.defineProperty(monitor, "monitors", {
+  enumerable = false
+  get = fn() = monitors end
+})
+
+/**
+ * Remove all the monitors.
+ */
+monitor.clearAll = proc()
+  monitors.splice(0)
+end
+
+/**
+ * Remove a monitor.
+ */
+monitor.clear = fn(p) -> deleted: bool
+  const i = monitors.findIndex(fn(i) = i.proxy == p end)
+  if i >= 0 then
+    monitors.splice(i, 1)
+    deleted = true
+end
+
+/**
+ * Returns the log for a monitor.
+ */
+monitor.log = fn(p) -> log
+  for each item in monitors do
+    if item.proxy === p then
+      log = item.monitor.log
+      break
+end

@@ -1,0 +1,7 @@
+use (
+  {monitor} = ~
+)
+
+repo("Clear monitors created", proc()
+  monitor.clearAll()
+end)
