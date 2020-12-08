@@ -59,7 +59,8 @@ fn createMonitor(object, opts: map) -> p
     #monitor a read access to a member.
     get = fn(target, member, receiver)
       #(1) pre
-      if not m.hasToBeMonitorized(member) then return target[member]
+      if not m.hasToBeMonitorized(member) then
+        return target[member]
 
       #(2) invoke property
       var result, value
@@ -78,6 +79,30 @@ fn createMonitor(object, opts: map) -> p
       #(4) return or throw
       if result ==~ THROW then throw(value)
       else if value is func then return createMonitor(value, log = m.log)
+      else return value
+    end
+
+    #monitor a write access to a member.
+    set = fn(target, member, value, receiver)
+      #(1) pre
+      if not m.hasToBeMonitorized(member) or opts.onlyCalls then
+        return target[member] = value
+
+      #(2) invoke property
+      var result
+
+      do
+        target[member] = value
+        result = Result.RETURN
+      catch e
+        value = e
+        result = Result.THROW
+
+      #(3) save access
+      m.saveAccess(target=, member, kind = AccessKind.SET, result, value)
+
+      #(4) return or throw
+      if result ==~ THROW then throw(value)
       else return value
     end
   })
@@ -104,7 +129,8 @@ end
  * Remove a monitor.
  */
 monitor.clear = fn(p) -> deleted: bool
-  const i = monitors.findIndex(fn(i) = i.proxy == p end)
+  const i = monitors.findIndex(fn(i) = i.proxy === p end)
+
   if i >= 0 then
     monitors.splice(i, 1)
     deleted = true

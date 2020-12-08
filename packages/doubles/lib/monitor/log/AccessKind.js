@@ -27,3 +27,7 @@ Object.defineProperty(AccessKind, "GET", {
   value: new AccessKind("GET", 1),
   enum: true
 });
+Object.defineProperty(AccessKind, "SET", {
+  value: new AccessKind("SET", 2),
+  enum: true
+});

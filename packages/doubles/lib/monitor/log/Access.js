@@ -43,3 +43,23 @@ const Access = new Proxy($Access, {
 
 });
 module.exports = exports = Access;
+
+Access.prototype.isGet = function () {
+  const self = this;
+  const {
+    kind
+  } = self;
+  {
+    return _core.dogma.enumEq(kind, "GET");
+  }
+};
+
+Access.prototype.isSet = function () {
+  const self = this;
+  const {
+    kind
+  } = self;
+  {
+    return _core.dogma.enumEq(kind, "SET");
+  }
+};

@@ -127,6 +127,53 @@ function createMonitor(object, opts) {
             return value;
           }
         }
+      },
+      ["set"]: (target, member, value, receiver) => {
+        /* istanbul ignore next */
+        _core.dogma.expect("target", target);
+        /* istanbul ignore next */
+
+
+        _core.dogma.expect("member", member);
+        /* istanbul ignore next */
+
+
+        _core.dogma.expect("value", value);
+        /* istanbul ignore next */
+
+
+        _core.dogma.expect("receiver", receiver);
+
+        {
+          if (!m.hasToBeMonitorized(member) || opts.onlyCalls) {
+            return _core.dogma.setItem("=", target, member, value);
+          }
+
+          let result;
+
+          try {
+            _core.dogma.setItem("=", target, member, value);
+
+            result = Result.RETURN;
+          } catch (e) {
+            value = e;
+            result = Result.THROW;
+          }
+
+          m.saveAccess({
+            'target': target,
+            'member': member,
+            'kind': AccessKind.SET,
+            'result': result,
+            'value': value
+          });
+
+          if (_core.dogma.enumEq(result, "THROW")) {
+            _core.dogma.raise(value);
+          } else {
+            return value;
+          }
+        }
       }
     });
     monitors.push({
@@ -164,7 +211,7 @@ monitor.clear = p => {
       _core.dogma.expect("i", i);
 
       {
-        return i.proxy == p;
+        return i.proxy === p;
       }
     });
 

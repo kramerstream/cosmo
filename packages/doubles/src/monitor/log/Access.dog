@@ -15,4 +15,15 @@ export struct Access: Entry
   /**
    * The kind of access.
    */
+  @inject
   pub const kind: AccessKind
+
+  /**
+   * Check whether the access is a get/read.
+   */
+  pub fn isGet() = kind ==~ GET
+
+  /**
+   * Check wheter the access is a set/update.
+   */
+  pub fn isSet() = kind ==~ SET
