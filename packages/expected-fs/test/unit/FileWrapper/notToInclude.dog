@@ -4,7 +4,7 @@ use (
 
 export suite(__filename, proc()
   test("when file doesn't include content, wrapper must be returned", proc()
-    const w = expected.file(__dirname, "toInclude.js")
+    const w = expected.file(__dirname, "toBeEmpty.js")
     expected(w.notToInclude("zyx")).toBeSameAs(w)
     expected(w.notToInclude(["xyz", "zyx"])).toBeSameAs(w)
   end)
