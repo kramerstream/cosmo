@@ -8,7 +8,7 @@ module.exports = exports = suite(__filename, () => {
   {
     test("when file doesn't include content, wrapper must be returned", () => {
       {
-        const w = expected.file(__dirname, "toInclude.js");
+        const w = expected.file(__dirname, "toBeEmpty.js");
         expected(w.notToInclude("zyx")).toBeSameAs(w);
         expected(w.notToInclude(["xyz", "zyx"])).toBeSameAs(w);
       }
