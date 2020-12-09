@@ -37,7 +37,8 @@
     "npm": ">= 6.14"
   },
   "dependencies": {
-    "@dogmalang/core": "^1.0.0-rc12.0"
+    "@dogmalang/core": "^1.0.0-rc12.0",
+    "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12",

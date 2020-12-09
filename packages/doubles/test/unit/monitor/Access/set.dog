@@ -8,7 +8,7 @@ use (
 export suite(__filename, proc()
   teardown("Clear monitors created")
 
-  test.only("when no error raised, log must be updated and value returned", proc()
+  test("when no error raised, log must be updated and value returned", proc()
     const target = {x = 11, y = 22}
 
     #(1) act
