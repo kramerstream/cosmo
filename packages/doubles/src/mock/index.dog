@@ -1,0 +1,95 @@
+use (
+  Mock
+  behavior/Behavior
+  behavior/PositionBasedBehavior
+  behavior/ArgsBasedBehavior
+)
+
+/**
+ * Creates an object mock from its [members].
+ */
+export fn mock(members: map) = createObjectMock(members)
+
+/**
+ * Creates a function mock from its [behavior] and [members].
+ */
+mock.fun = fn(behavior: (list, map), members?: map) = createFunctionMock(behavior, members) end
+
+/**
+ * Creates a field mock from its [behavior].
+ */
+mock.field = fn(behavior) = createFieldBehavior(behavior) end
+
+/**
+ * Creates an object with the members to mock.
+ */
+fn createMembers(def: map) -> members: map
+  for each name, value in def do
+    if value is not [Behavior, func] then
+      throw(TypeError($"Member ${name} must be field mock or function mock."))
+
+    members[name] = value
+
+/**
+ * Creates an object mock, attending to the behavior [def]inition.
+ */
+fn createObjectMock(def: map)
+  const m = Mock(members = createMembers(def))
+
+  return proxy({}, {
+    get = fn(target, member, receiver) = m.processGet(member) end
+  })
+
+/**
+ * Creates a function mock, attending to the behavior [def]inition and its [members].
+ */
+fn createFunctionMock(def: (list, map), members?: map)
+  #(1) prepare members if needed
+  if members then
+    members = createMembers(members)
+
+  #(2) create behavior
+  var behavior
+
+  if def is not list then #map
+    behavior = PositionBasedBehavior()
+    behavior.addResponse(def{*,default=true})
+  else  #list
+    #determine kind of behavior
+    var Behavior = PositionBasedBehavior
+
+    with len(def) do
+      if 0 then
+        nop
+      if 1 then
+        if "args" in def[0] and "i" not in def[0] then
+          Behavior = ArgsBasedBehavior
+      else
+        if "i" not in (if "default" not in def[0] then def[0] else def[1] end) then
+          Behavior = ArgsBasedBehavior
+
+    behavior = Behavior()
+
+    #add responses to behavior
+    for each resp in def do
+      behavior.addResponse(resp)
+
+  #(3) return mock
+  const mock = Mock(callBehavior = behavior, members)
+
+  return proxy(nop, {
+    apply = fn(target, thisArg?, args) = mock.processCall(args) end
+    get = fn(target, member, receiver) = mock.processGet(member) end
+  })
+
+/**
+ * Creates a field mock, attending to its [def]inition.
+ */
+fn createFieldBehavior(def: (list, map)) -> behavior
+  behavior = PositionBasedBehavior()
+
+  if def is not list then #map
+    behavior.addResponse(def{*,default=true})
+  else
+    for each resp in def do
+      behavior.addResponse(resp)

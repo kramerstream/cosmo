@@ -1,0 +1,10 @@
+use (
+  alias:expected
+  {mock} = ~
+)
+
+export suite(__filename, proc()
+  suite("when mock imported, function must be returned", proc()
+    expected(mock).toBeFn().member("fun").toBeFn()
+  end)
+end)

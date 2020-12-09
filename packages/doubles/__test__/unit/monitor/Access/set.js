@@ -15,7 +15,7 @@ const AccessKind = _core.dogma.use(require("../../../../lib/monitor/log/AccessKi
 module.exports = exports = suite(__filename, () => {
   {
     teardown("Clear monitors created");
-    test.only("when no error raised, log must be updated and value returned", () => {
+    test("when no error raised, log must be updated and value returned", () => {
       {
         const target = {
           ["x"]: 11,

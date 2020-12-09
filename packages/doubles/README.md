@@ -3,7 +3,11 @@
 [![NPM version](https://img.shields.io/npm/v/@kramertest/cosmo-doubles.svg)](https://npmjs.org/package/@kramertest/cosmo-doubles)
 [![Total downloads](https://img.shields.io/npm/dt/@kramertest/cosmo-doubles.svg)](https://npmjs.org/package/@kramertest/cosmo-doubles)
 
-Doubles library to simulate objects.
+Doubles library to simulate objects:
+
+- **Monitors** to save the accesses and the calls to objects.
+
+- **Mocks** to simulate the behavior of an object or a function.
 
 *Engineered in Valencia, Spain, EU by KramerStream.*
 
@@ -80,10 +84,10 @@ const m = monitor({});
 monitor.clear(m);
 ```
 
-### Log
+### Monitor log
 
-A monitor has a log where the accesses and the calls are saved.
-To get the log associated to a monitor:
+A monitor has a **log**, where the accesses and the calls are saved.
+To get the log associated to a monitor, use the `monitor.log()` function:
 
 ```javascript
 const m = monitor({});
@@ -174,3 +178,139 @@ const log = monitor.log(m);
 expected(log.calls).toBeEqualTo(1);
 expected(log.getCall(0)).toHave({value: 123});
 ```
+
+## Mocks
+
+A **mock** is an object to simulate another, defining only the responses.
+
+### Function mock
+
+A **function mock** is a mock for a function.
+This is defined with the `mock.fun()` function:
+
+```javascript
+mock.fun(behavior: object[]|object): function
+```
+
+The `behavior` is an object containing the responses for the calls.
+If we always want to perform the same operation, we can use an object, as follows:
+
+```javascript
+fn = mock.fun({returns: 1234});
+fn(/*...*/)  //returns 1234
+
+fn = mock.fun({raises: new Error("my error")});
+fn(/*...*/)  //throws the error
+
+fn = mock.fun({resolves: 1234});
+await(fn(/*...*/))  //returns 1234
+
+fn = mock.fun({rejects: new Error("my error")});
+await(fn(/*...*/))  //throws the error
+```
+
+The following fields are possible:
+
+Field | Data type | Description
+-- | -- | --
+returns | any | Value to return.
+raises | any | Value to raise.
+resolves | any | Value to return using a resolved promise.
+rejects | any | Value to raise using a rejected promise.
+
+But if we want to select among several possibilities, we have to use an array of objects.
+Two types are possible: position-based or arguments-based.
+
+On the one hand, we can use a **position-based behavior**, keeping in mind the arguments passed to the calls aren't used.
+In this case, the first response must contain the `i` field set to `0`.
+Example:
+
+```javascript
+const m = mock.fun([
+  {i: 0, returns: 1234},
+  {returns: 5678},
+  {default: true, returns: 13579}
+]);
+
+m("one")    //returns 1234
+m("two")    //returns 5678
+m("three")  //returns 13579
+m("four")   //returns 13579
+```
+
+The **default response**, defined with `default` to `true`, is used when call out of range.
+If not defined, in the previous example, the third and fourth calls will raise an error.
+
+On the other hand, we have the **arguments-based behavior**, using the arguments to select the response.
+These are defined with an `args` field.
+Example:
+
+```javascript
+fn = mock.fun([
+  {default: true, returns: "default value"},
+  {args: [12, 34], returns: 1234},
+  {args: [34, 12], raises: new Error("my error")},
+  {args: [12, 34, 56], resolves: 135},
+  {args: [56, 34, 12], rejects: new Error("my error")}
+]);
+
+fn()                  //returns "default value", arguments not found in the responses
+fn(34, 12)            //throws error
+fn(12, 34)            //returns 1234
+await(fn(56, 34, 12)) //throws error
+await(fn(12, 34, 56)) //returns 135
+fn(1, 3, 5, 7, 9)     //returns "default value", arguments not found in the responses
+```
+
+If the function mock must simulate fields too, we can define its members in the second argument of `mock.fun()`:
+
+```javascript
+fn = mock.fun(
+  {returns: 1234},  //always returns  1234, but this argument can be an array
+  {
+    x: mock.field({returns: "value of x"}),
+    y: mock.field({returns: "value of y"})
+  }
+);
+
+fn()        //returns 1234
+fn(12, 34)  //returns 1234
+fn.x        //returns value of x
+fn.y        //returns value of y
+```
+
+### Object mock
+
+An **object mock** is a mock for a (non-callable) object.
+These are created with `mock()`:
+
+```javascript
+const {mock} = require("@kramertest/cosmo-doubles");
+const {field, fun} = mock;
+
+const fn = mock({
+  member1: field(/*...*/),
+  member2: fun(/*...*/)
+});
+```
+
+The fields must be defined with `mock.field()` and the methods with `mock.fun()`.
+
+Example:
+
+```javascript
+const {mock} = require("@kramertest/cosmo-doubles");
+const {field, fun} = mock;
+
+const m = mock({
+  x: field({returns: 12}),
+  y: field({raises: new Error("my error")}),
+  z: fun({returns: 1234})
+});
+
+m.x   //returns 12
+m.y   //raises an error
+m.z() //returns 1234
+```
+
+The fields can have position-based behaviors if needed, defined as seen with `mock.fun()`.

@@ -1,0 +1,98 @@
+use (
+  alias:expected
+  {mock} = ~
+)
+
+export suite(__filename, proc()
+  suite("position-based mock", proc()
+    test("when empty mock, the calls must raise error", proc()
+      const p = mock.fun([])
+      expected(proc() p() end).toRaise(Error("No response available for mock."))
+    end)
+
+    test("when position-based mock, position-based behavior must be used", proc()
+      #(1) act
+      const p = mock.fun([
+        {default = true, returns = "the default value"},
+        {i = 0, returns = 111}
+        {raises = Error("my error")}
+        {returns = 222}
+      ])
+
+      #(2) assert
+      expected(p).toBeCallable()
+      expected(p()).toBeEqualTo(111)
+      expected(proc() p() end).toRaise(Error("my error"))
+      expected(p()).toBeEqualTo(222)
+      expected(p()).toBeEqualTo("the default value")
+      expected(p()).toBeEqualTo("the default value")
+    end)
+
+    test("when position-based mock using the first item, position-based behavior must be used", proc()
+      #(1) act
+      const p = mock.fun([
+        {i = 0, returns = 111}
+        {raises = Error("my error")}
+        {returns = 222}
+      ])
+
+      #(2) assert
+      expected(p).toBeCallable()
+      expected(p()).toBeEqualTo(111)
+      expected(proc() p() end).toRaise(Error("my error"))
+      expected(p()).toBeEqualTo(222)
+      expected(proc() p() end).toRaise(Error("No response available for mock."))
+    end)
+  end)
+
+  suite("args-based mock", proc()
+    test("when valid behavior, args-based behavior must be used", async proc()
+      #(1) act
+      const p = mock.fun([
+        {default = true, returns = "the default value"},
+        {args = [11, 22], returns = 1122}
+        {args = [22, 11], raises = Error("my error")}
+        {args = ["simple minds"], resolves = "promised you a miracle"}
+        {args = [], rejects = Error("rejected promise")}
+      ])
+
+      #(2) assert
+      expected(p(11, 22)).toBeEqualTo(1122)
+      expected(proc() p(22, 11) end).toRaise(Error("my error"))
+      await(expected(p("simple minds"))).toBeEqualTo("promised you a miracle")
+      expected(pawait(p())).it(0).toBeEqualTo(false).it(1).toBeEqualTo(Error("rejected promise"))
+      expected(p(11, 22)).toBeEqualTo(1122)
+    end)
+
+    test("when not default call and needed in call, error must be raised", proc()
+      #(1) act
+      const p = mock.fun([
+        {args = ["promised you a miracle"], returns = "simple minds"}
+      ])
+
+      #(2) assert
+      expected(p("promised you a miracle")).toBeEqualTo("simple minds")
+      expected(proc() p("alive and kicking") end).toRaise(Error("No response available for mock."))
+    end)
+  end)
+
+  suite("mock base", proc()
+    test("when operation not passed, error must be raised", proc()
+      expected(proc()
+        mock.fun([{}])
+      end).toRaise(TypeError("returns, raises, resolves or rejects must be set."))
+    end)
+
+    test("when simulating function with fields, fields can be accessed", proc()
+      #(1) act
+      const m = mock.fun(
+        {returns = "Simple Minds - Waterfront"}
+        {x = mock.field({returns = "Simple Minds - Live in the City of Light"})}
+      )
+
+      #(2) assert
+      expected(m()).toBeEqualTo("Simple Minds - Waterfront")
+      expected(m.x).toBeEqualTo("Simple Minds - Live in the City of Light")
+    end)
+  end)
+end)

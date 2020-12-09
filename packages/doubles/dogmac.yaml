@@ -5,5 +5,7 @@ uses:
     js: @kramertest/cosmo-expected
   fs:
     js: @dogmalang/fs.sync
+  isEqual:
+    js: lodash.isequal
   path:
     js: @dogmalang/path

@@ -1,0 +1,48 @@
+use (
+  ../Double
+  behavior/Behavior
+  behavior/Response
+  behavior/Operation
+)
+
+/**
+ * A mock.
+ */
+export struct Mock: Double
+  /**
+   * The behavior when the mock called.
+   */
+  @hidden @inject
+  pub const callBehavior?
+
+  /**
+   * The members with their behaviors.
+   */
+  @hidden @inject
+  pub const members := {}
+
+  /**
+   * Process a call on the mock.
+   */
+  pub fn processCall(args: list) -> result
+    if resp ::= callBehavior.getResponse(args) then
+      result = self.handleResponse(resp)
+    else
+      throw(Error("No response available for mock."))
+
+  /**
+   * Process a read of a member.
+   */
+  pub fn processGet(member) -> result
+    if (result = members[member]) is Behavior then
+      result = self.handleResponse(result.getResponse([]))
+
+  /**
+   * Processes a call.
+   */
+  pub fn handleResponse(resp: Response) -> result
+    with resp.operation do
+      if Operation.RETURN then result = resp.value
+      if Operation.THROW then throw(resp.value)
+      if Operation.RESOLVE then result = promise.resolve(resp.value)
+      if Operation.REJECT then result = promise.reject(resp.value)
