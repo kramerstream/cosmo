@@ -2,7 +2,7 @@
 
 var _core = require("@dogmalang/core");
 
-const expected = _core.dogma.use(require("@kramertest/cosmo-expected"));
+const expected = _core.dogma.use(require("@cosmokramer/expected"));
 
 module.exports = exports = suite(__filename, () => {
   {

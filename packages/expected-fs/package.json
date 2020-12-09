@@ -1,5 +1,5 @@
 {
-  "name": "@kramertest/cosmo-expected-fs",
+  "name": "@cosmokramer/expected-fs",
   "version": "0.1.0",
   "description": "Plugin for asserting files and directories.",
   "homepage": "http://kramer.stream",
@@ -50,7 +50,7 @@
     "@ethronpi/exec": "^0.2.0",
     "@ethronpi/fs": "^0.3.0",
     "@ethronpi/npm": "^0.3.0",
-    "@kramertest/cosmo-expected": "^0.1.0",
+    "@cosmokramer/expected": "^0.1.0",
     "eslint": "^7.14.0",
     "nyc": "^15.1.0"
   },

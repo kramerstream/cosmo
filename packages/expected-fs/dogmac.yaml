@@ -2,7 +2,7 @@ uses:
   assert:
     js: assert
   expected:
-    js: @kramertest/cosmo-expected
+    js: @cosmokramer/expected
   fs:
     js: @dogmalang/fs.sync
   path:

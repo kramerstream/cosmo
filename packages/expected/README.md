@@ -1,7 +1,7 @@
-# @kramertest/cosmo-expected
+# @cosmokramer/expected
 
-[![NPM version](https://img.shields.io/npm/v/@kramertest/cosmo-expected.svg)](https://npmjs.org/package/@kramertest/cosmo-expected)
-[![Total downloads](https://img.shields.io/npm/dt/@kramertest/cosmo-expected.svg)](https://npmjs.org/package/@kramertest/cosmo-expected)
+[![NPM version](https://img.shields.io/npm/v/@cosmokramer/expected.svg)](https://npmjs.org/package/@cosmokramer/expected)
+[![Total downloads](https://img.shields.io/npm/dt/@cosmokramer/expected.svg)](https://npmjs.org/package/@cosmokramer/expected)
 
 An assertion test library.
 
@@ -10,13 +10,13 @@ An assertion test library.
 ## Use
 
 ```javascript
-const expected = require("@kramertest/cosmo-expected");
+const expected = require("@cosmokramer/expected");
 ```
 
 To load plugins, use its method `plugin()` as follows:
 
 ```javascript
-expected.plugin("@kramertest/cosmo-expected-fs");
+expected.plugin("@cosmokramer/expected-fs");
 ```
 
 ## Chaining assertions
