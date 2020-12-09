@@ -1,7 +1,7 @@
-# @kramertest/cosmo-doubles
+# @cosmokramer/doubles
 
-[![NPM version](https://img.shields.io/npm/v/@kramertest/cosmo-doubles.svg)](https://npmjs.org/package/@kramertest/cosmo-doubles)
-[![Total downloads](https://img.shields.io/npm/dt/@kramertest/cosmo-doubles.svg)](https://npmjs.org/package/@kramertest/cosmo-doubles)
+[![NPM version](https://img.shields.io/npm/v/@cosmokramer/doubles.svg)](https://npmjs.org/package/@cosmokramer/doubles)
+[![Total downloads](https://img.shields.io/npm/dt/@cosmokramer/doubles.svg)](https://npmjs.org/package/@cosmokramer/doubles)
 
 Doubles library to simulate objects:
 
@@ -24,7 +24,7 @@ We can use the monitor as the object being monitored.
 We can create a monitor for an object as follows:
 
 ```javascript
-const {monitor} = require("@kramertest/cosmo-doubles");
+const {monitor} = require("@cosmokramer/doubles");
 const object = {/* ... */};
 
 //monitor all: field accesses and calls
@@ -64,7 +64,7 @@ We can use the monitor as the function object being monitored.
 We can create a monitor for a function object as follows:
 
 ```javascript
-const {monitor} = require("@kramertest/cosmo-doubles");
+const {monitor} = require("@cosmokramer/doubles");
 function fn(/*...*/) { /* ... */ }
 
 //monitor function calls
@@ -285,7 +285,7 @@ An **object mock** is a mock for a (non-callable) object.
 These are created with `mock()`:
 
 ```javascript
-const {mock} = require("@kramertest/cosmo-doubles");
+const {mock} = require("@cosmokramer/doubles");
 const {field, fun} = mock;
 
 const fn = mock({
@@ -299,7 +299,7 @@ The fields must be defined with `mock.field()` and the methods with `mock.fun()`
 Example:
 
 ```javascript
-const {mock} = require("@kramertest/cosmo-doubles");
+const {mock} = require("@cosmokramer/doubles");
 const {field, fun} = mock;
 
 const m = mock({

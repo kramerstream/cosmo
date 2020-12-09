@@ -1,7 +1,7 @@
-# @kramertest/cosmo-expected-fs
+# @cosmokramer/expected-fs
 
-[![NPM version](https://img.shields.io/npm/v/@kramertest/cosmo-expected-fs.svg)](https://npmjs.org/package/@kramertest/cosmo-expected-fs)
-[![Total downloads](https://img.shields.io/npm/dt/@kramertest/cosmo-expected-fs.svg)](https://npmjs.org/package/@kramertest/cosmo-expected-fs)
+[![NPM version](https://img.shields.io/npm/v/@cosmokramer/expected-fs.svg)](https://npmjs.org/package/@cosmokramer/expected-fs)
+[![Total downloads](https://img.shields.io/npm/dt/@cosmokramer/expected-fs.svg)](https://npmjs.org/package/@cosmokramer/expected-fs)
 
 Test assertion plugin for files and directories.
 
@@ -10,8 +10,8 @@ Test assertion plugin for files and directories.
 ## Use
 
 ```javascript
-const expected = require("@kramertest/cosmo-expected");
-expected.plugin("@kramertest/cosmo-expected-fs");
+const expected = require("@cosmokramer/expected");
+expected.plugin("@cosmokramer/expected-fs");
 ```
 
 ## File assertions

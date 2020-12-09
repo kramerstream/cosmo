@@ -4,6 +4,6 @@ var _core = require("@dogmalang/core");
 
 const plugin = _core.dogma.use(require("../.."));
 
-const expected = _core.dogma.use(require("@kramertest/cosmo-expected"));
+const expected = _core.dogma.use(require("@cosmokramer/expected"));
 
 expected.plugin(plugin);

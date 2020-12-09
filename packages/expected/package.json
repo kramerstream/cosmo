@@ -1,5 +1,5 @@
 {
-  "name": "@kramertest/cosmo-expected",
+  "name": "@cosmokramer/expected",
   "version": "0.1.0",
   "description": "Assertion test library.",
   "homepage": "http://kramer.stream",
@@ -20,12 +20,12 @@
     "test"
   ],
   "bugs": {
-    "url": "https://github.com/kramerstream/assert/issues",
+    "url": "https://github.com/kramerstream/cosmo/issues",
     "email": "assert@kramer.stream"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kramerstream/assert.git"
+    "url": "https://github.com/kramerstream/cosmo/assert.git"
   },
   "preferGlobal": false,
   "main": "lib/index.js",

@@ -1,5 +1,5 @@
 {
-  "name": "@kramertest/cosmo-doubles",
+  "name": "@cosmokramer/doubles",
   "version": "0.1.0",
   "description": "Test doubles library.",
   "homepage": "http://kramer.stream",
@@ -20,12 +20,12 @@
     "test"
   ],
   "bugs": {
-    "url": "https://github.com/kramerstream/assert/issues",
+    "url": "https://github.com/kramerstream/cosmo/issues",
     "email": "doubles@kramer.stream"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kramerstream/assert.git"
+    "url": "https://github.com/kramerstream/cosmo.git"
   },
   "preferGlobal": false,
   "main": "lib/index.js",
@@ -49,7 +49,7 @@
     "@ethronpi/exec": "^0.2.0",
     "@ethronpi/fs": "^0.3.0",
     "@ethronpi/npm": "^0.3.0",
-    "@kramertest/cosmo-expected": "^0.1.0",
+    "@cosmokramer/expected": "^0.1.0",
     "eslint": "^7.14.0",
     "nyc": "^15.1.0"
   },
