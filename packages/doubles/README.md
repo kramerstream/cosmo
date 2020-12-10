@@ -217,6 +217,7 @@ returns | any | Value to return.
 raises | any | Value to raise.
 resolves | any | Value to return using a resolved promise.
 rejects | any | Value to raise using a rejected promise.
+invokes | function | Function to call, the value returned will be the value returned.
 
 But if we want to select among several possibilities, we have to use an array of objects.
 Two types are possible: position-based or arguments-based.
@@ -314,3 +315,11 @@ m.z() //returns 1234
 ```
 
 The fields can have position-based behaviors if needed, defined as seen with `mock.fun()`.
+
+#### Special fields
+
+```javascript
+mock.field.uuid()   //similar to: mock.field({default: true, invokes: uuid.v4})
+mock.field.list()   //similar to: mock.field({default: true, invokes: () => []})
+mock.field.map()    //similar to: mock.field({default: true, invokes: () => ({})})
+```

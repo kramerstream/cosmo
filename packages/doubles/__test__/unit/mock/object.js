@@ -8,29 +8,35 @@ const {
   mock
 } = _core.dogma.use(require("../../.."));
 
+const {
+  field,
+  fun
+} = mock;
 module.exports = exports = suite(__filename, () => {
   {
     test("when well-defined, object mock must be returned", () => {
       {
         const o = mock({
-          ["x"]: mock.field([{
+          ["a"]: field.uuid(),
+          ["b"]: field.list(),
+          ["c"]: field.map(),
+          ["x"]: field([{
             ["returns"]: 1234
           }, {
             ["returns"]: 4321
           }]),
-          ["y"]: mock.field({
-            ["returns"]: 5678
-          }),
-          ["z"]: mock.fun({
+          ["y"]: fun({
             ["returns"]: 12345678
           })
         });
         expected(o).notToBeCallable();
+        expected(o.a).toBeUuid();
+        expected(o.b).toBeList().toBeEmpty();
+        expected(o.c).toBeMap().toBeEmpty();
         expected(o.x).toBeEqualTo(1234);
-        expected(o.y).toBeEqualTo(5678);
-        expected(o.z()).toBeEqualTo(12345678);
-        expected(o.z()).toBeEqualTo(12345678);
-        expected(o.y).toBeEqualTo(5678);
+        expected(o.y()).toBeEqualTo(12345678);
+        expected(o.y()).toBeEqualTo(12345678);
+        expected(o.a).toBeUuid();
         expected(o.x).toBeEqualTo(4321);
       }
     });

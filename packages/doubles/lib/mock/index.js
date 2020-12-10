@@ -10,6 +10,8 @@ const PositionBasedBehavior = _core.dogma.use(require("./behavior/PositionBasedB
 
 const ArgsBasedBehavior = _core.dogma.use(require("./behavior/ArgsBasedBehavior"));
 
+const field = _core.dogma.use(require("./field"));
+
 function mock(members) {
   /* istanbul ignore next */
   _core.dogma.expect("members", members, _core.map);
@@ -33,14 +35,7 @@ mock.fun = (behavior, members) => {
   }
 };
 
-mock.field = behavior => {
-  /* istanbul ignore next */
-  _core.dogma.expect("behavior", behavior);
-
-  {
-    return createFieldBehavior(behavior);
-  }
-};
+mock.field = field;
 
 function createMembers(def) {
   let members = {};
@@ -186,26 +181,4 @@ function createFunctionMock(def, members) {
       }
     });
   }
-}
-
-function createFieldBehavior(def) {
-  let behavior;
-  /* istanbul ignore next */
-
-  _core.dogma.expect("def", def, [_core.list, _core.map]);
-
-  {
-    behavior = PositionBasedBehavior();
-
-    if (_core.dogma.isNot(def, _core.list)) {
-      behavior.addResponse(_core.dogma.clone(def, {
-        "default": true
-      }, {}, [], []));
-    } else {
-      for (const resp of def) {
-        behavior.addResponse(resp);
-      }
-    }
-  }
-  return behavior;
 }

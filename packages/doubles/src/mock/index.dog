@@ -3,6 +3,7 @@ use (
   behavior/Behavior
   behavior/PositionBasedBehavior
   behavior/ArgsBasedBehavior
+  field
 )
 
 /**
@@ -18,7 +19,7 @@ mock.fun = fn(behavior: (list, map), members?: map) = createFunctionMock(behavio
 /**
  * Creates a field mock from its [behavior].
  */
-mock.field = fn(behavior) = createFieldBehavior(behavior) end
+mock.field = field
 
 /**
  * Creates an object with the members to mock.
@@ -81,15 +82,3 @@ fn createFunctionMock(def: (list, map), members?: map)
     apply = fn(target, thisArg?, args) = mock.processCall(args) end
     get = fn(target, member, receiver) = mock.processGet(member) end
   })
-
-/**
- * Creates a field mock, attending to its [def]inition.
- */
-fn createFieldBehavior(def: (list, map)) -> behavior
-  behavior = PositionBasedBehavior()
-
-  if def is not list then #map
-    behavior.addResponse(def{*,default=true})
-  else
-    for each resp in def do
-      behavior.addResponse(resp)

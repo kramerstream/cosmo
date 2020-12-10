@@ -38,18 +38,19 @@
   },
   "dependencies": {
     "@dogmalang/core": "^1.0.0-rc12.0",
-    "lodash.isequal": "^4.5.0"
+    "lodash.isequal": "^4.5.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.12",
     "@babel/core": "^7.12",
     "@babel/preset-env": "^7.12",
+    "@cosmokramer/expected": "^0.1.0",
     "@ethronpi/babel": "^0.11.0",
     "@ethronpi/eslint": "^0.1.0",
     "@ethronpi/exec": "^0.2.0",
     "@ethronpi/fs": "^0.3.0",
     "@ethronpi/npm": "^0.3.0",
-    "@cosmokramer/expected": "^0.1.0",
     "eslint": "^7.14.0",
     "nyc": "^15.1.0"
   },

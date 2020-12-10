@@ -1,0 +1,17 @@
+use (
+  {assert} = pkg:chai
+  pkg:uuid
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when valid UUID, wrapper must be returned", proc()
+    for each value in [uuid.v1(), uuid.v4()] do
+      const w = expected(value)
+      assert.strictEqual(w.toBeUuid(), w)
+  end)
+
+  test("when invalid UUID, assertion error must be raised", proc()
+    assert.throws(proc() expected("123").toBeUuid() end)
+  end)
+end)

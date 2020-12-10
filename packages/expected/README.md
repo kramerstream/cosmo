@@ -246,3 +246,10 @@ await(expected(Promise.resolve())).toBeFullfilled()
 //asserting rejected promise
 await(expected(Promise.rejected())).toBeRejected()
 ```
+
+## Misc
+
+```javascript
+//value should be a valid UUID: v1 or v4
+expected(value).toBeUuid()
+```

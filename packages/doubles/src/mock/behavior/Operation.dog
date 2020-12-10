@@ -6,3 +6,4 @@ export enum Operation
   THROW
   RESOLVE
   REJECT
+  CALL

@@ -80,7 +80,11 @@ module.exports = exports = suite(__filename, () => {
           {
             const p = mock.fun([{
               ["default"]: true,
-              ["returns"]: "the default value"
+              ["invokes"]: () => {
+                {
+                  return "alive and kicking";
+                }
+              }
             }, {
               ["args"]: [11, 22],
               ["returns"]: 1122
@@ -103,6 +107,7 @@ module.exports = exports = suite(__filename, () => {
             (0, await expected(p("simple minds"))).toBeEqualTo("promised you a miracle");
             expected(await _core.dogma.pawait(() => p())).it(0).toBeEqualTo(false).it(1).toBeEqualTo(Error("rejected promise"));
             expected(p(11, 22)).toBeEqualTo(1122);
+            expected(p("alive", "and", "kicking")).toBeEqualTo("alive and kicking");
           }
         });
         test("when not default call and needed in call, error must be raised", () => {

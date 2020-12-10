@@ -4,6 +4,8 @@ var _core = require("@dogmalang/core");
 
 const assert = _core.dogma.use(require("assert"));
 
+const uuid = _core.dogma.use(require("uuid"));
+
 const $ValueWrapper = class ValueWrapper {
   constructor(_) {
     /* istanbul ignore next */
@@ -958,6 +960,19 @@ ValueWrapper.prototype.toHaveBeenRejected = ValueWrapper.prototype.toBeRejected 
   {
     if (this.fulfilled !== false) {
       _core.dogma.raise(`${value} should have been rejected.`);
+    }
+  }
+  return this;
+};
+
+ValueWrapper.prototype.toBeUuid = function () {
+  const self = this;
+  const {
+    value
+  } = self;
+  {
+    if (!uuid.validate(value)) {
+      _core.dogma.raise("${value} should be a valid UUID.");
     }
   }
   return this;

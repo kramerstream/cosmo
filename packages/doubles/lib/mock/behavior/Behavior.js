@@ -66,6 +66,9 @@ Behavior.prototype.addResponse = function (decl) {
     } else if (_core.dogma.includes(decl, "rejects")) {
       value = decl.rejects;
       operation = Operation.REJECT;
+    } else if (_core.dogma.includes(decl, "invokes")) {
+      value = _core.dogma.expect('decl.invokes', decl.invokes, _core.func);
+      operation = Operation.CALL;
     } else {
       _core.dogma.raise(TypeError("returns, raises, resolves or rejects must be set."));
     }

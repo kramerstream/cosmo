@@ -39,3 +39,7 @@ Object.defineProperty(Operation, "REJECT", {
   value: new Operation("REJECT", 4),
   enum: true
 });
+Object.defineProperty(Operation, "CALL", {
+  value: new Operation("CALL", 5),
+  enum: true
+});

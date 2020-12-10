@@ -49,7 +49,7 @@ export suite(__filename, proc()
     test("when valid behavior, args-based behavior must be used", async proc()
       #(1) act
       const p = mock.fun([
-        {default = true, returns = "the default value"},
+        {default = true, invokes = fn() = "alive and kicking" end},
         {args = [11, 22], returns = 1122}
         {args = [22, 11], raises = Error("my error")}
         {args = ["simple minds"], resolves = "promised you a miracle"}
@@ -62,6 +62,7 @@ export suite(__filename, proc()
       await(expected(p("simple minds"))).toBeEqualTo("promised you a miracle")
       expected(pawait(p())).it(0).toBeEqualTo(false).it(1).toBeEqualTo(Error("rejected promise"))
       expected(p(11, 22)).toBeEqualTo(1122)
+      expected(p("alive", "and", "kicking")).toBeEqualTo("alive and kicking")
     end)
 
     test("when not default call and needed in call, error must be raised", proc()

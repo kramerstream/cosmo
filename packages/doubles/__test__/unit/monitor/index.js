@@ -47,7 +47,7 @@ module.exports = exports = suite(__filename, () => {
           {
             const p = monitor({});
             monitor.clear(p);
-            expected(monitor.monitors).toBeEmpty(0);
+            expected(monitor.monitors).toBeEmpty();
           }
         });
         test("when proxy not saved, no clear performed and mustn't be raised error", () => {

@@ -144,6 +144,15 @@ Mock.prototype.handleResponse = function (resp) {
           /*istanbul ignore next*/
 
           break;
+
+        case Operation.CALL:
+          {
+            result = resp.value();
+          }
+          ;
+          /*istanbul ignore next*/
+
+          break;
       }
     }
   }

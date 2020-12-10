@@ -39,6 +39,9 @@ export struct Behavior
     else if "rejects" in decl then
       value = decl.rejects
       operation = Operation.REJECT
+    else if "invokes" in decl then
+      value = expect(decl.invokes, func)
+      operation = Operation.CALL
     else
       throw(TypeError("returns, raises, resolves or rejects must be set."))
 
