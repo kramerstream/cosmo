@@ -1,0 +1,18 @@
+use (
+  alias:expected
+  ~/lib/executionContext
+)
+
+export suite(__filename, proc()
+  test("when created, mock must work", proc()
+    #(1) act
+    const (
+      functionName = "myfn"
+      functionDirectory = "/my/dir"
+      m = executionContext(functionName=, functionDirectory)
+    )
+
+    #(2) assert
+    expected(m).toHave(functionName=, functionDirectory).member("invocationId").toBeUuid()
+  end)
+end)

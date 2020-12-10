@@ -1,0 +1,24 @@
+use (
+  {mock} = alias:doubles
+  executionContext
+  traceContext
+  logger
+)
+
+const {fun, field} = mock
+
+/**
+ * Returns a mock for a Context.
+ */
+export fn context(opts: {functionName: text, functionDirectory: text}) = mock({
+  invocationId = field.uuid()
+  executionContext = executionContext(opts)
+  bindings = field.map()
+  bindingData = field.map()
+  traceContext = traceContext()
+  bidingDefinitions = field.list()
+  log = logger()
+  done = fun()
+  if opts.req then req = opts.req
+  if opts.res then res = opts.res
+})

@@ -1,0 +1,18 @@
+use (
+  {mock} = alias:doubles
+)
+
+const {fun} = mock
+
+/**
+ * Returns a mock for a Logger
+ */
+export fn logger() = fun(
+  {returns = nil}
+  {
+    error = fun()
+    warn = fun()
+    info = fun()
+    verbose = fun()
+  }
+)

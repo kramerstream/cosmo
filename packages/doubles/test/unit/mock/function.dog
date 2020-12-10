@@ -10,6 +10,12 @@ export suite(__filename, proc()
       expected(proc() p() end).toRaise(Error("No response available for mock."))
     end)
 
+    test("when procedure mock, the calls must return nil", proc()
+      const p = mock.fun()
+      expected(p()).toBeNil()
+      expected(p()).toBeNil()
+    end)
+
     test("when position-based mock, position-based behavior must be used", proc()
       #(1) act
       const p = mock.fun([

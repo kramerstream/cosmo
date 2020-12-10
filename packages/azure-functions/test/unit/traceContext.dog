@@ -1,0 +1,11 @@
+use (
+  alias:expected
+  ~/lib/traceContext
+)
+
+export suite(__filename, proc()
+  test("when mock created, mock must work", proc()
+    const m = traceContext()
+    expected(m.attributes).toBeMap().toBeEmpty()
+  end)
+end)

@@ -1,0 +1,13 @@
+uses:
+  assert:
+    js: assert
+  doubles:
+    js: @cosmokramer/doubles
+  expected:
+    js: @cosmokramer/expected
+  fs:
+    js: @dogmalang/fs.sync
+  isEqual:
+    js: lodash.isequal
+  path:
+    js: @dogmalang/path

@@ -1,0 +1,14 @@
+use (
+  {mock} = alias:doubles
+)
+
+const {field} = mock
+
+/**
+ * Returns a mock for an ExecutionContext.
+ */
+export fn executionContext(opts:> {functionName: text, functionDirectory: text}) = mock({
+  invocationId = field.uuid()
+  functionName = field.text(functionName)
+  functionDirectory = field.text(functionDirectory)
+})

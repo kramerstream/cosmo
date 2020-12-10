@@ -25,9 +25,8 @@ module.exports = exports = mock;
 
 mock.fun = (behavior, members) => {
   /* istanbul ignore next */
-  _core.dogma.expect("behavior", behavior, [_core.list, _core.map]);
+  if (behavior != null) _core.dogma.expect("behavior", behavior, [_core.list, _core.map]);
   /* istanbul ignore next */
-
 
   if (members != null) _core.dogma.expect("members", members, _core.map);
   {
@@ -46,8 +45,8 @@ function createMembers(def) {
   {
     for (const [name, value] of Object.entries(def)) {
       {
-        if (_core.dogma.isNot(value, [Behavior, _core.func])) {
-          _core.dogma.raise(TypeError(`Member ${name} must be field mock or function mock.`));
+        if (_core.dogma.isNot(value, [Behavior, _core.func, _core.map])) {
+          _core.dogma.raise(TypeError(`Member '${name}' must be map, field mock or function mock.`));
         }
 
         _core.dogma.setItem("=", members, name, value);
@@ -88,9 +87,8 @@ function createObjectMock(def) {
 
 function createFunctionMock(def, members) {
   /* istanbul ignore next */
-  _core.dogma.expect("def", def, [_core.list, _core.map]);
+  if (def != null) _core.dogma.expect("def", def, [_core.list, _core.map]);
   /* istanbul ignore next */
-
 
   if (members != null) _core.dogma.expect("members", members, _core.map);
   {
@@ -100,12 +98,7 @@ function createFunctionMock(def, members) {
 
     let behavior;
 
-    if (_core.dogma.isNot(def, _core.list)) {
-      behavior = PositionBasedBehavior();
-      behavior.addResponse(_core.dogma.clone(def, {
-        "default": true
-      }, {}, [], []));
-    } else {
+    if (_core.dogma.is(def, _core.list)) {
       let Behavior = PositionBasedBehavior;
       {
         const _ = (0, _core.len)(def);
@@ -144,6 +137,17 @@ function createFunctionMock(def, members) {
       for (const resp of def) {
         behavior.addResponse(resp);
       }
+    } else if (_core.dogma.is(def, _core.map)) {
+      behavior = PositionBasedBehavior();
+      behavior.addResponse(_core.dogma.clone(def, {
+        "default": true
+      }, {}, [], []));
+    } else {
+      behavior = PositionBasedBehavior();
+      behavior.addResponse({
+        'default': true,
+        'returns': null
+      });
     }
 
     const mock = Mock({
