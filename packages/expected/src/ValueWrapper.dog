@@ -1,5 +1,6 @@
 use (
   alias:assert
+  pkg:uuid
 )
 
 /**
@@ -458,6 +459,13 @@ export struct ValueWrapper
   pub fn toBeRejected() -> self
     if self.fulfilled !== false then
       throw($"${value} should have been rejected.")
+
+  /**
+   * Check whether the value is a valid UUID.
+   */
+  pub fn toBeUuid() -> self
+    if not uuid.validate(value) then
+      throw("${value} should be a valid UUID.")
 
 /**
  * Check whether two arrays are similar, that is, the same items in any order.

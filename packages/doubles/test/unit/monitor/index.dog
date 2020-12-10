@@ -42,7 +42,7 @@ export suite(__filename, proc()
       monitor.clear(p)
 
       #(2) assert
-      expected(monitor.monitors).toBeEmpty(0)
+      expected(monitor.monitors).toBeEmpty()
     end)
 
     test("when proxy not saved, no clear performed and mustn't be raised error", proc()

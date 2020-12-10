@@ -1,0 +1,40 @@
+use (
+  pkg:uuid
+  behavior/PositionBasedBehavior
+)
+
+/**
+ * Creates a field mock, attending to its [def]inition.
+ */
+export fn field(def: (list, map)) -> behavior
+  behavior = PositionBasedBehavior()
+
+  if def is not list then #map
+    behavior.addResponse(def{*,default=true})
+  else
+    for each resp in def do
+      behavior.addResponse(resp)
+
+/**
+ * Creates a field that always returns a UUID v4.
+ */
+field.uuid = fn() -> behavior
+  behavior = PositionBasedBehavior()
+  behavior.addResponse(default = true, invokes = uuid.v4)
+end
+
+/**
+ * Creates a field to return an empty array.
+ */
+field.list = fn() -> behavior
+  behavior = PositionBasedBehavior()
+  behavior.addResponse(default = true, invokes = fn() = [] end)
+end
+
+/**
+ * Creates a field to return an empty object.
+ */
+field.map = fn() -> behavior
+  behavior = PositionBasedBehavior()
+  behavior.addResponse(default = true, invokes = fn() = {} end)
+end

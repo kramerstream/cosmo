@@ -46,3 +46,4 @@ export struct Mock: Double
       if Operation.THROW then throw(resp.value)
       if Operation.RESOLVE then result = promise.resolve(resp.value)
       if Operation.REJECT then result = promise.reject(resp.value)
+      if Operation.CALL then result = resp.value()
