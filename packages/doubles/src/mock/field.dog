@@ -20,7 +20,7 @@ export fn field(def: (list, map)) -> behavior
  */
 field.uuid = fn() -> behavior
   behavior = PositionBasedBehavior()
-  behavior.addResponse(default = true, invokes = uuid.v4)
+  behavior.addResponse(default = true, returns = uuid.v4())
 end
 
 /**

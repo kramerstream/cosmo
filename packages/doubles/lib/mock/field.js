@@ -36,7 +36,7 @@ field.uuid = () => {
     behavior = PositionBasedBehavior();
     behavior.addResponse({
       'default': true,
-      'invokes': uuid.v4
+      'returns': uuid.v4()
     });
   }
   return behavior;

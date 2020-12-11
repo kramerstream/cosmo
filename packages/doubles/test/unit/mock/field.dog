@@ -1,0 +1,98 @@
+use (
+  alias:expected
+  {mock} = ~
+)
+
+const {field} = mock
+
+export suite(__filename, proc()
+  test("when uuid field created, the same uuid must be returned", proc()
+    #(1) act
+    const (
+      obj = mock(fld = field.uuid())
+      uuid = obj.fld
+    )
+
+    #(2) assert
+    expected(obj).toBeMap()
+    expected(obj.fld).toBeUuid().toBeEqualTo(uuid)
+  end)
+
+  test("when text field, the passed value must be returned", proc()
+    const obj = mock(fld = field.text("ciao!"))
+    expected(obj.fld).toBeEqualTo("ciao!")
+  end)
+
+  suite("map field", proc()
+    test("when field doesn't receive object, new object must be created and it can be modified", proc()
+      #(1) act
+      const obj = mock(fld = field.map())
+      obj.fld.x = 123
+      obj.fld.y = 321
+
+      #(2) assert
+      expected(obj).toBeMap()
+      expected(obj.fld).toHave(x = 123, y = 321).member("z").toBeNil()
+    end)
+
+    test("when field receives object, this must be cloned and its clone can be modified", proc()
+      #(1) act
+      const (
+        original = {}
+        obj = mock(fld = field.map(original))
+      )
+
+      obj.fld.x = 123
+      obj.fld.y = 321
+
+      #(2) assert
+      expected(original).toBeEmpty()
+      expected(obj).toBeMap()
+      expected(obj.fld).toHave(x = 123, y = 321).member("z").toBeNil()
+    end)
+  end)
+
+  suite("list field", proc()
+    test("when list field doesn't receive list, new list must be created and it can be modified", proc()
+      #(1) act
+      const obj = mock(fld = field.list())
+      obj.fld.push(123)
+      obj.fld.push(321)
+
+      #(2) assert
+      expected(obj).toBeMap()
+      expected(obj.fld).toBeEqualTo([123, 321])
+    end)
+
+    test("when list field receives list, this must be cloned and its clone can be modified", proc()
+      #(1) act
+      const (
+        original = [123, 456]
+        obj = mock(fld = field.list(original))
+      )
+
+      obj.fld.push(789)
+
+      #(2) assert
+      expected(original).toBeEqualTo([123, 456])
+      expected(obj).toBeMap()
+      expected(obj.fld).toBeEqualTo([123, 456, 789])
+    end)
+  end)
+
+  test("when any field, a value must be passed and this is cloned and can be modified", proc()
+    #(1) act
+    const (
+      original = {}
+      obj = mock(fld = field.any(original))
+    )
+
+    obj.fld.x = 11
+    obj.fld.y = 22
+
+    #(2) assert
+    expected(original).toBeEmpty()
+    expected(obj).toBeMap()
+    expected(obj.fld).toHave(x = 11, y = 22)
+  end)
+end)

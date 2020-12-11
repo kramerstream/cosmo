@@ -323,7 +323,7 @@ The fields can have position-based behaviors if needed, defined as seen with `mo
 #### Special fields
 
 ```javascript
-mock.field.uuid()         //similar to: mock.field({default: true, invokes: uuid.v4})
+mock.field.uuid()         //similar to: mock.field({default: true, returns: uuid.v4()})
 mock.field.list(returns)  //similar to: mock.field({default: true, returns: returns ?? []})
 mock.field.map(returns)   //similar to: mock.field({default: true, returns: returns ?? {}})
 mock.field.text(returns)  //similar to: mock.field({default: true, returns})

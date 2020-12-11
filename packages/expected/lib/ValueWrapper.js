@@ -972,7 +972,7 @@ ValueWrapper.prototype.toBeUuid = function () {
   } = self;
   {
     if (!uuid.validate(value)) {
-      _core.dogma.raise("${value} should be a valid UUID.");
+      _core.dogma.raise(`${value} should be a valid UUID.`);
     }
   }
   return this;
