@@ -6,3 +6,44 @@
 Doubles library to simulate **Azure Functions** objects.
 
 *Engineered in Valencia, Spain, EU by KramerStream.*
+
+## context()
+
+The `context()` function returns a mock for a `Context` instance:
+
+```javascript
+const {context, httpRequest, httpResponse} = require("@cosmokramer/azure-functions");
+const ctx = context({
+  functionName: "the function name",                      //mandatory
+  functionDirectory: "local dir where function defined",  //mandatory
+  bindings: {},                                           //optional
+  req: httpRequest(/*...*/),                              //optional
+  res: httpResponse(/*...*/)                              //optional
+})
+```
+
+## httpRequest()
+
+`httpRequest()` returns a mock for an `HttpRequest` instance:
+
+```javascript
+const {httpRequest} = require("@cosmokramer/azure-functions");
+const req = httpRequest({
+  method: "GET, PUT, POST...",      //mandatory
+  originalUrl: "the original url",  //mandatory
+  uri: "the uri",                   //mandatory
+  headers: {},                      //optional
+  query: {},                        //optional
+  params: {},                       //optional
+  body: {}                          //optional
+});
+```
+
+## httpResponse()
+
+`httpResponse()` returns a mock for an `HttpResponse` instance:
+
+```javascript
+const {httpResponse} = require("@cosmokramer/azure-functions");
+const res = httpResponse();
+```

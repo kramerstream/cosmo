@@ -30,7 +30,6 @@ module.exports = exports = suite(__filename, () => {
         expected(o.x).toBeEqualTo(1234);
         expected(o.y()).toBeEqualTo(12345678);
         expected(o.y()).toBeEqualTo(12345678);
-        expected(o.u).toBeUuid();
         expected(o.x).toBeEqualTo(4321);
       }
     });

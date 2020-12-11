@@ -329,3 +329,6 @@ mock.field.map(returns)   //similar to: mock.field({default: true, returns: retu
 mock.field.text(returns)  //similar to: mock.field({default: true, returns})
 mock.field.any(returns)   //similar to: mock.field({default: true, returns})
 ```
+
+**Important**. When a `returns` passed, a clone of the value is used.
+So well, the original value is not modified.

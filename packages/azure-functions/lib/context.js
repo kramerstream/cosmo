@@ -27,14 +27,23 @@ function context(opts) {
     functionDirectory: {
       optional: false,
       type: _core.text
+    },
+    bindings: {
+      optional: true,
+      type: _core.map
     }
   }));
 
+  let {
+    functionName,
+    functionDirectory,
+    bindings
+  } = opts;
   {
     return mock(Object.assign({}, {
       ["invocationId"]: field.uuid(),
       ["executionContext"]: executionContext(opts),
-      ["bindings"]: field.map(),
+      ["bindings"]: field.map(bindings),
       ["bindingData"]: field.map(),
       ["traceContext"]: traceContext(),
       ["bidingDefinitions"]: field.list(),

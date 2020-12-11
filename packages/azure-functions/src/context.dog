@@ -9,11 +9,12 @@ const {fun, field} = mock
 
 /**
  * Returns a mock for a Context.
+ * We have to set, mandatorily, [functionName] and [functionDirectory]; optionally, [bindings], [req] and [res].
  */
-export fn context(opts: {functionName: text, functionDirectory: text}) = mock({
+export fn context(opts:> {functionName: text, functionDirectory: text, bindings?: map}) = mock({
   invocationId = field.uuid()
   executionContext = executionContext(opts)
-  bindings = field.map()
+  bindings = field.map(bindings)
   bindingData = field.map()
   traceContext = traceContext()
   bidingDefinitions = field.list()
