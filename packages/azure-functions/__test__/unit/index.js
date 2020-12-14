@@ -10,7 +10,7 @@ module.exports = exports = suite(__filename, () => {
   {
     test("api must export functions", () => {
       {
-        expected(api).member("context").toBeFn().member("httpRequest").toBeFn().member("httpResponse").toBeFn();
+        expected(api).member("context").toBeFn().member("httpRequest").toBeFn().member("httpResponse").toBeFn().member("timer").toBeFn();
       }
     });
   }

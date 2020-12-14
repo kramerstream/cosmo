@@ -2,4 +2,5 @@ pub use (
   context
   httpRequest
   httpResponse
+  timer
 )

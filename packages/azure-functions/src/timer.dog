@@ -1,0 +1,27 @@
+use (
+  pkg:moment
+  alias:cron
+  {mock} = alias:doubles
+)
+
+const {field} = mock
+
+/**
+ * Returns a mock for a timer event.
+ */
+export fn timer(opts:> {schedule: text})
+  const (
+    dateFmt = "YYYY-MM-DDTHH:mm:ss.SSSS"
+    currentDate = timestamp()
+    interval = cron.parseExpression(schedule, currentDate=)
+    nextSchedule = interval.next()
+  )
+
+  return mock({
+    isPastDue = field.bool(true)
+    scheduleForDST = field.bool(true)
+    scheduleStatus =
+      last = moment(currentDate).format(dateFmt)
+      'next' = interval.next()._date.format(dateFmt)
+      lastUpdated = moment(currentDate).format(dateFmt)
+  })

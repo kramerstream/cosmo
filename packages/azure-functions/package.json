@@ -39,6 +39,8 @@
   "dependencies": {
     "@cosmokramer/doubles": "^0.1.0",
     "@dogmalang/core": "^1.0.0-rc12.0",
+    "cron-parser": "^2.18.0",
+    "moment": "^2.29.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

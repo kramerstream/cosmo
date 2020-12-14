@@ -1,6 +1,8 @@
 uses:
   assert:
     js: assert
+  cron:
+    js: cron-parser
   doubles:
     js: @cosmokramer/doubles
   expected:

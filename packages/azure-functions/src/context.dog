@@ -1,7 +1,9 @@
 use (
   alias:path
+  pkg:moment
   {v4 as uuid} = pkg:uuid
   {mock} = alias:doubles
+  timerMock = timer
   executionContext
   traceContext
   logger
@@ -11,38 +13,77 @@ const {fun, field} = mock
 
 /**
  * Returns a mock for a Context.
- * We have to set, mandatorily, [functionName] and [functionDirectory].
+ * We have to set, mandatorily, [functionDirectory].
  */
-export fn context(opts:> {functionName: text, functionDirectory: text, bindings?: map, req?}) -> m
+export fn context(opts:> {functionDirectory: text, functionName?: text}) -> m
   #(1) prepare
   const (
     invocationId = uuid()
     bindingDefinitions = use(path.join(functionDirectory, "function.json")).bindings
+    trigger = bindingDefinitions[0]
   )
 
+  functionName ?= path.name(functionDirectory)
+
+  #(2) create monitor attending to trigger
+  with trigger.type do
+    if "httpTrigger" then m = createHttpTriggerContext(opts{*,functionName,invocationId,bindingDefinitions})
+    if "timerTrigger" then m = createTimerTriggerContext(opts{*,functionName,invocationId,bindingDefinitions})
+
+/**
+ * Returns an HTTP-trigger context.
+ */
+fn createHttpTriggerContext(opts:> {invocationId: text, functionName: text, functionDirectory: text, bindings?: map, bindingDefinitions: map[], req?})
+  #(1) prepare
+  const trigger = bindingDefinitions[0]
+
   if not bindings and req then
-    bindings = {
-      req =
-        method = req.method
-        url = req.url
-        originalUrl = req.originalUrl
-        headeres = req.headers
-        query = req.query
-        params = req.params
-        body = req.body
-        rawBody = req.rawBody
+    bindings ?= {
+     [trigger.name] =
+       method = req.method
+       url = req.url
+       originalUrl = req.originalUrl
+       headeres = req.headers
+       query = req.query
+       params = req.params
+       body = req.body
+       rawBody = req.rawBody
     }
 
   #(2) create mock
-  m = mock({
+  return mock({
+   invocationId = field.text(invocationId)
+   executionContext = executionContext(invocationId=, functionName, functionDirectory)
+   traceContext = traceContext()
+   bindings = field.map(bindings)
+   bindingData = field.map()
+   bindingDefinitions = field.list(bindingDefinitions)
+   log = logger()
+   done = fun()
+   if req then req
+   if opts.res then res = opts.res
+  })
+
+/**
+ * Creates a timer-trigger context.
+ */
+fn createTimerTriggerContext(opts:> {invocationId: text, functionName: text, functionDirectory: text, bindingDefinitions: map[], bindings?: map, timer?})
+  const (
+    trigger = bindingDefinitions[0]
+  )
+
+  #(1) get the timer data
+  bindings ?= {}
+  bindings[trigger.name] = if timer is map then timer else timerMock(schedule = trigger.schedule) end
+
+  #(2) create mock
+  return mock({
     invocationId = field.text(invocationId)
     executionContext = executionContext(invocationId=, functionName, functionDirectory)
     traceContext = traceContext()
-    bindings = field.map(bindings)
+    bindings
     bindingData = field.map()
     bindingDefinitions = field.list(bindingDefinitions)
     log = logger()
     done = fun()
-    if req then req
-    if opts.res then res = opts.res
   })

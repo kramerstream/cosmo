@@ -6,13 +6,13 @@ use (
 
 export suite(__filename, proc()
   const (
-    functionName = "fn1"
-    functionDirectory = path.join(__dirname, "../data/fn1")
+    functionName = "http"
+    functionDirectory = path.join(__dirname, $"../../data/${functionName}")
   )
 
   test("when mock created w/o req, mock must not have req", proc()
     #(1) act
-    const m = context(functionName=, functionDirectory)
+    const m = context(functionDirectory=, functionName)
 
     #(2) assert
     expected(m).member("invocationId").toBeUuid()
@@ -30,7 +30,7 @@ export suite(__filename, proc()
     const (
       req = {}
       res = {}
-      m = context(functionName=, functionDirectory, req, res)
+      m = context(functionDirectory=, req, res)
     )
 
     #(2) assert

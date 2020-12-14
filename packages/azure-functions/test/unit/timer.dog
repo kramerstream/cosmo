@@ -1,0 +1,12 @@
+use (
+  alias:expected
+  {timer} = ~
+)
+
+export suite(__filename, proc()
+  test("when schedule passed, timer must be created and returned as mock", proc()
+    expected(
+      timer(schedule = "0 */1 * * * *")
+    ).toHave(isPastDue = true, scheduleForDST = true).member("scheduleStatus").toHave(["next", "last"])
+  end)
+end)

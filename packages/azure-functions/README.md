@@ -9,20 +9,33 @@ Doubles library to simulate **Azure Functions** objects.
 
 ## context()
 
-The `context()` function returns a mock for a `Context` instance:
+The `context()` function returns a mock for a `Context` instance.
+The context type is determined from the `functionDirectory/function.json` file.
+
+HTTP trigger context:
 
 ```javascript
 const {context, httpRequest, httpResponse} = require("@cosmokramer/azure-functions");
 const ctx = context({
-  functionName: "the function name",                      //mandatory
   functionDirectory: "local dir where function defined",  //mandatory
+  functionName: "the function name",                      //optional; if unset, dir name used
   bindings: {},                                           //optional
   req: httpRequest(/*...*/),                              //optional
   res: httpResponse(/*...*/)                              //optional
 })
 ```
 
-The function directory is used for importing the `function.json` to build the `bindingDefinitions`.
+Timer trigger context:
+
+```javascript
+const {context, timer} = require("@cosmokramer/azure-functions");
+const ctx = context({
+  functionDirectory: "local dir where function defined",  //mandatory
+  functionName: "the function name",                      //optional; if unset, dir name used
+  bindings: {},                                           //optional
+  timer: timer({schedule: "cron expression"})             //optional; if unset, trigger definition used
+})
+```
 
 ## httpRequest()
 
@@ -33,7 +46,7 @@ const {httpRequest} = require("@cosmokramer/azure-functions");
 const req = httpRequest({
   method: "GET, PUT, POST...",      //mandatory
   url: "the url",                   //mandatory
-  originalUrl: "the original url",  //optional, url used when not set
+  originalUrl: "the original url",  //optional; url used when not set
   headers: {},                      //optional
   query: {},                        //optional
   params: {},                       //optional
@@ -48,4 +61,13 @@ const req = httpRequest({
 ```javascript
 const {httpResponse} = require("@cosmokramer/azure-functions");
 const res = httpResponse();
+```
+
+## timer()
+
+`timer()` returns a mock for a timer event:
+
+```javascript
+const {timer} = require("@cosmokramer/azure-functions");
+const timer = timer({schedule: "cron expression such as, for example, 0 */1 * * * *"});
 ```

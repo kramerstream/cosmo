@@ -23,6 +23,11 @@ export suite(__filename, proc()
     expected(obj.fld).toBeEqualTo("ciao!")
   end)
 
+  test("when bool field, the passed value must be returned", proc()
+    const obj = mock(fld = field.bool(true))
+    expected(obj.fld).toBeEqualTo(true)
+  end)
+
   suite("map field", proc()
     test("when field doesn't receive object, new object must be created and it can be modified", proc()
       #(1) act

@@ -326,8 +326,9 @@ The fields can have position-based behaviors if needed, defined as seen with `mo
 mock.field.uuid()         //similar to: mock.field({default: true, returns: uuid.v4()})
 mock.field.list(returns)  //similar to: mock.field({default: true, returns: returns ?? []})
 mock.field.map(returns)   //similar to: mock.field({default: true, returns: returns ?? {}})
-mock.field.text(returns)  //similar to: mock.field({default: true, returns})
-mock.field.any(returns)   //similar to: mock.field({default: true, returns})
+mock.field.text(returns)  //similar to: mock.field({default: true, returns: "text to return"})
+mock.field.bool(returns)  //similar to: mock.field({default: true, returns: true|false})
+mock.field.any(returns)   //similar to: mock.field({default: true, returns: value})
 ```
 
 **Important**. When a `returns` passed, a clone of the value is used.

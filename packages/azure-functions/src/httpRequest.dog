@@ -2,7 +2,7 @@ use (
   {mock} = alias:doubles
 )
 
-const {fun, field} = mock
+const {field} = mock
 
 /**
  * Returns a mock for an HttpRequest.

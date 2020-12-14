@@ -32,6 +32,14 @@ field.text = fn(returns: text) -> behavior
 end
 
 /**
+ * Creates a field to return a boolean value.
+ */
+field.bool = fn(returns: bool) -> behavior
+  behavior = PositionBasedBehavior()
+  behavior.addResponse(default = true, returns)
+end
+
+/**
  * Creates a field to return an empty array.
  */
 field.list = fn(returns?: list) -> behavior

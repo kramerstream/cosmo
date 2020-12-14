@@ -8,16 +8,15 @@ const path = _core.dogma.use(require("@dogmalang/path"));
 
 const {
   context
-} = _core.dogma.use(require("../.."));
+} = _core.dogma.use(require("../../.."));
 
 module.exports = exports = suite(__filename, () => {
   {
-    const functionName = "fn1";
-    const functionDirectory = path.join(__dirname, "../data/fn1");
-    test("when mock created w/o req, mock must not have req", () => {
+    const functionName = "timer";
+    const functionDirectory = path.join(__dirname, `../../data/${functionName}`);
+    test("when mock created w/o timer, timer must be create", () => {
       {
         const m = context({
-          'functionName': functionName,
           'functionDirectory': functionDirectory
         });
         expected(m).member("invocationId").toBeUuid();
@@ -25,38 +24,35 @@ module.exports = exports = suite(__filename, () => {
           'functionName': functionName,
           'functionDirectory': functionDirectory
         }).member("invocationId").toBeUuid();
-        expected(m).member("bindings").toBeMap().member("bindingData").toBeMap();
+        expected(m.bindings.timer.scheduleStatus).toHave("last", "next", "lastUpdated").member("next").toBeText();
+        expected(m.bindings.timer).toBeMap().member("scheduleStatus").toBeMap();
         expected(m.traceContext).member("attributes").toBeMap();
         expected(m.log).toBeFn();
         expected(m.done).toBeFn();
-        expected(m).notToHave("req");
         expected(m.bindingDefinitions).toBeList().it(0).toHave({
-          'type': "httpTrigger"
+          'type': "timerTrigger"
         });
       }
     });
-    test("when mock created w/ req, mock must have req", () => {
+    test("when bindings passed, timer must be added to it", () => {
       {
-        const req = {};
-        const res = {};
         const m = context({
-          'functionName': functionName,
           'functionDirectory': functionDirectory,
-          'req': req,
-          'res': res
+          'bindings': {},
+          'timer': {}
         });
-        expected(m).toHave({
-          'req': req,
-          'res': res
-        }).member("invocationId").toBeUuid();
+        expected(m).member("invocationId").toBeUuid();
         expected(m.executionContext).toHave({
           'functionName': functionName,
           'functionDirectory': functionDirectory
         }).member("invocationId").toBeUuid();
-        expected(m).member("bindings").toBeMap().member("bindingData").toBeMap();
+        expected(m.bindings.timer).toBeEqualTo({});
         expected(m.traceContext).member("attributes").toBeMap();
         expected(m.log).toBeFn();
         expected(m.done).toBeFn();
+        expected(m.bindingDefinitions).toBeList().it(0).toHave({
+          'type': "timerTrigger"
+        });
       }
     });
   }

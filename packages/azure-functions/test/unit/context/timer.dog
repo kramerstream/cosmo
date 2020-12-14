@@ -1,0 +1,41 @@
+use (
+  alias:expected
+  alias:path
+  {context} = ~
+)
+
+export suite(__filename, proc()
+  const (
+    functionName = "timer"
+    functionDirectory = path.join(__dirname, $"../../data/${functionName}")
+  )
+
+  test("when mock created w/o timer, timer must be create", proc()
+    #(1) act
+    const m = context(functionDirectory=)
+
+    #(2) assert
+    expected(m).member("invocationId").toBeUuid()
+    expected(m.executionContext).toHave(functionName=, functionDirectory).member("invocationId").toBeUuid()
+    expected(m.bindings.timer.scheduleStatus).toHave("last", "next", "lastUpdated").member("next").toBeText()
+    expected(m.bindings.timer).toBeMap().member("scheduleStatus").toBeMap()
+    expected(m.traceContext).member("attributes").toBeMap()
+    expected(m.log).toBeFn()
+    expected(m.done).toBeFn()
+    expected(m.bindingDefinitions).toBeList().it(0).toHave('type' = "timerTrigger")
+  end)
+
+  test("when bindings passed, timer must be added to it", proc()
+    #(1) act
+    const m = context(functionDirectory=, bindings = {}, timer = {})
+
+    #(2) assert
+    expected(m).member("invocationId").toBeUuid()
+    expected(m.executionContext).toHave(functionName=, functionDirectory).member("invocationId").toBeUuid()
+    expected(m.bindings.timer).toBeEqualTo({})
+    expected(m.traceContext).member("attributes").toBeMap()
+    expected(m.log).toBeFn()
+    expected(m.done).toBeFn()
+    expected(m.bindingDefinitions).toBeList().it(0).toHave('type' = "timerTrigger")
+  end)
+end)

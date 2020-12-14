@@ -7,7 +7,6 @@ const {
 } = _core.dogma.use(require("@cosmokramer/doubles"));
 
 const {
-  fun,
   field
 } = mock;
 

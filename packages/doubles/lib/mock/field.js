@@ -58,6 +58,22 @@ field.text = returns => {
   return behavior;
 };
 
+field.bool = returns => {
+  let behavior;
+  /* istanbul ignore next */
+
+  _core.dogma.expect("returns", returns, _core.bool);
+
+  {
+    behavior = PositionBasedBehavior();
+    behavior.addResponse({
+      'default': true,
+      'returns': returns
+    });
+  }
+  return behavior;
+};
+
 field.list = returns => {
   let behavior;
   /* istanbul ignore next */

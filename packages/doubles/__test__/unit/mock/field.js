@@ -31,6 +31,14 @@ module.exports = exports = suite(__filename, () => {
         expected(obj.fld).toBeEqualTo("ciao!");
       }
     });
+    test("when bool field, the passed value must be returned", () => {
+      {
+        const obj = mock({
+          'fld': field.bool(true)
+        });
+        expected(obj.fld).toBeEqualTo(true);
+      }
+    });
     suite("map field", () => {
       {
         test("when field doesn't receive object, new object must be created and it can be modified", () => {
