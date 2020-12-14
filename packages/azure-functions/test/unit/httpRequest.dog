@@ -8,13 +8,13 @@ export suite(__filename, proc()
     #(1) act
     const (
       method = "GET"
-      uri = "https://localhost:8080/my/endpoint"
+      url = "https://localhost:8080/my/endpoint"
       originalUrl = "http://localhost:8080/my/endpoint"
-      m = httpRequest(method=, uri, originalUrl)
+      m = httpRequest(method=, url, originalUrl)
     )
 
     #(2) assert
-    expected(m).toHave(method=, uri, originalUrl, headers = {}, query = {}, params = {})
+    expected(m).toHave(method=, url, originalUrl, headers = {}, query = {}, params = {})
     expected(m).notToHave("body").notToHave("rawBody")
   end)
 
@@ -22,14 +22,13 @@ export suite(__filename, proc()
     #(1) act
     const (
       method = "GET"
-      uri = "http://localhost:8080/my/endpoint"
-      originalUrl = "http://localhost:8080/my/endpoint"
+      url = "http://localhost:8080/my/endpoint"
       body = {}
       rawBody = {}
-      m = httpRequest(method=, uri, originalUrl, body, rawBody)
+      m = httpRequest(method=, url, body, rawBody)
     )
 
     #(2) assert
-    expected(m).toHave(method=, uri, originalUrl, headers = {}, query = {}, params = {}, body, rawBody)
+    expected(m).toHave(method=, url, originalUrl=url, headers = {}, query = {}, params = {}, body, rawBody)
   end)
 end)

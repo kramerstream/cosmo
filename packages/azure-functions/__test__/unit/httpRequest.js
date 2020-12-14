@@ -13,16 +13,16 @@ module.exports = exports = suite(__filename, () => {
     test("when mock created w/o body, mock must not define body", () => {
       {
         const method = "GET";
-        const uri = "https://localhost:8080/my/endpoint";
+        const url = "https://localhost:8080/my/endpoint";
         const originalUrl = "http://localhost:8080/my/endpoint";
         const m = httpRequest({
           'method': method,
-          'uri': uri,
+          'url': url,
           'originalUrl': originalUrl
         });
         expected(m).toHave({
           'method': method,
-          'uri': uri,
+          'url': url,
           'originalUrl': originalUrl,
           'headers': {},
           'query': {},
@@ -34,21 +34,19 @@ module.exports = exports = suite(__filename, () => {
     test("when mock created w/ body, mock must define body", () => {
       {
         const method = "GET";
-        const uri = "http://localhost:8080/my/endpoint";
-        const originalUrl = "http://localhost:8080/my/endpoint";
+        const url = "http://localhost:8080/my/endpoint";
         const body = {};
         const rawBody = {};
         const m = httpRequest({
           'method': method,
-          'uri': uri,
-          'originalUrl': originalUrl,
+          'url': url,
           'body': body,
           'rawBody': rawBody
         });
         expected(m).toHave({
           'method': method,
-          'uri': uri,
-          'originalUrl': originalUrl,
+          'url': url,
+          'originalUrl': url,
           'headers': {},
           'query': {},
           'params': {},

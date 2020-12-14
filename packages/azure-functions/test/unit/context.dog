@@ -1,16 +1,18 @@
 use (
   alias:expected
+  alias:path
   {context} = ~
 )
 
 export suite(__filename, proc()
+  const (
+    functionName = "fn1"
+    functionDirectory = path.join(__dirname, "../data/fn1")
+  )
+
   test("when mock created w/o req, mock must not have req", proc()
     #(1) act
-    const (
-      functionName = "myfn"
-      functionDirectory = "/my/dir"
-      m = context(functionName=, functionDirectory)
-    )
+    const m = context(functionName=, functionDirectory)
 
     #(2) assert
     expected(m).member("invocationId").toBeUuid()
@@ -20,13 +22,12 @@ export suite(__filename, proc()
     expected(m.log).toBeFn()
     expected(m.done).toBeFn()
     expected(m).notToHave("req")
+    expected(m.bindingDefinitions).toBeList().it(0).toHave('type' = "httpTrigger")
   end)
 
   test("when mock created w/ req, mock must have req", proc()
     #(1) act
     const (
-      functionName = "myfn"
-      functionDirectory = "/my/dir"
       req = {}
       res = {}
       m = context(functionName=, functionDirectory, req, res)

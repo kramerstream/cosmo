@@ -31,6 +31,7 @@ tasks:
       - [babel, build/src, lib/]
       - [fs.rm, __test__]
       - [babel, build/test, __test__/]
+      - [fs.cp, test/data, __test__/data/]
 
   - macro: build
     title: Build package

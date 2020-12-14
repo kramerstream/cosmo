@@ -13,6 +13,8 @@ const {
 function traceContext() {
   {
     return mock({
+      ["traceparent"]: field.text(""),
+      ["tracestate"]: field.text(""),
       ["attributes"]: field.map()
     });
   }

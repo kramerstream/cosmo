@@ -22,6 +22,8 @@ const ctx = context({
 })
 ```
 
+The function directory is used for importing the `function.json` to build the `bindingDefinitions`.
+
 ## httpRequest()
 
 `httpRequest()` returns a mock for an `HttpRequest` instance:
@@ -30,8 +32,8 @@ const ctx = context({
 const {httpRequest} = require("@cosmokramer/azure-functions");
 const req = httpRequest({
   method: "GET, PUT, POST...",      //mandatory
-  originalUrl: "the original url",  //mandatory
-  uri: "the uri",                   //mandatory
+  url: "the url",                   //mandatory
+  originalUrl: "the original url",  //optional, url used when not set
   headers: {},                      //optional
   query: {},                        //optional
   params: {},                       //optional

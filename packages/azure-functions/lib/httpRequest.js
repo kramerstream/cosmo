@@ -18,12 +18,12 @@ function httpRequest(opts) {
       optional: false,
       type: _core.text
     },
-    uri: {
+    url: {
       optional: false,
       type: _core.text
     },
     originalUrl: {
-      optional: false,
+      optional: true,
       type: _core.text
     },
     headers: {
@@ -42,7 +42,7 @@ function httpRequest(opts) {
 
   let {
     method,
-    uri,
+    url,
     originalUrl,
     headers,
     query,
@@ -51,8 +51,8 @@ function httpRequest(opts) {
   {
     return mock(Object.assign({}, {
       ["method"]: field.text(method),
-      ["originalUrl"]: field.text(originalUrl),
-      ["uri"]: field.text(uri),
+      ["url"]: field.text(url),
+      ["originalUrl"]: field.text(originalUrl !== null && originalUrl !== void 0 ? originalUrl : url),
       ["headers"]: field.map(headers),
       ["query"]: field.map(query),
       ["params"]: field.map(params)

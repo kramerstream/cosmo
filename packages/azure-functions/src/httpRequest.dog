@@ -7,10 +7,10 @@ const {fun, field} = mock
 /**
  * Returns a mock for an HttpRequest.
  */
-export fn httpRequest(opts:> {method: text, uri: text, originalUrl: text, headers?: map, query?: map, params?: map}) = mock({
+export fn httpRequest(opts:> {method: text, url: text, originalUrl?: text, headers?: map, query?: map, params?: map}) = mock({
   method = field.text(method)
-  originalUrl = field.text(originalUrl)
-  uri = field.text(uri)
+  url = field.text(url)
+  originalUrl = field.text(originalUrl ?? url)
   headers = field.map(headers)
   query = field.map(query)
   params = field.map(params)

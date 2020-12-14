@@ -13,6 +13,10 @@ const {
 function executionContext(opts) {
   /* istanbul ignore next */
   _core.dogma.expect("opts", opts, _core.dogma.intf("inline", {
+    invocationId: {
+      optional: false,
+      type: _core.text
+    },
     functionName: {
       optional: false,
       type: _core.text
@@ -24,12 +28,13 @@ function executionContext(opts) {
   }));
 
   let {
+    invocationId,
     functionName,
     functionDirectory
   } = opts;
   {
     return mock({
-      ["invocationId"]: field.uuid(),
+      ["invocationId"]: field.text(invocationId),
       ["functionName"]: field.text(functionName),
       ["functionDirectory"]: field.text(functionDirectory)
     });
