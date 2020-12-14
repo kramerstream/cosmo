@@ -10,4 +10,5 @@ const {fun, field} = mock
 export fn httpResponse() = mock({
   headers = field.map()
   cookies = field.map()
+  send = fun()
 })

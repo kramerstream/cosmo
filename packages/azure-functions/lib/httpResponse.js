@@ -15,7 +15,8 @@ function httpResponse() {
   {
     return mock({
       ["headers"]: field.map(),
-      ["cookies"]: field.map()
+      ["cookies"]: field.map(),
+      ["send"]: fun()
     });
   }
 }
