@@ -13,8 +13,9 @@ export fn mock(members: map) = createObjectMock(members)
 
 /**
  * Creates a function mock from its [behavior] and [members].
+ * If no behavior, a procedure mock is created.
  */
-mock.fun = fn(behavior: (list, map), members?: map) = createFunctionMock(behavior, members) end
+mock.fun = fn(behavior?: (list, map), members?: map) = createFunctionMock(behavior, members) end
 
 /**
  * Creates a field mock from its [behavior].
@@ -26,8 +27,8 @@ mock.field = field
  */
 fn createMembers(def: map) -> members: map
   for each name, value in def do
-    if value is not [Behavior, func] then
-      throw(TypeError($"Member ${name} must be field mock or function mock."))
+    if value is not [Behavior, func, map] then
+      throw(TypeError($"Member '${name}' must be map, field mock or function mock."))
 
     members[name] = value
 
@@ -44,7 +45,7 @@ fn createObjectMock(def: map)
 /**
  * Creates a function mock, attending to the behavior [def]inition and its [members].
  */
-fn createFunctionMock(def: (list, map), members?: map)
+fn createFunctionMock(def?: (list, map), members?: map)
   #(1) prepare members if needed
   if members then
     members = createMembers(members)
@@ -52,10 +53,7 @@ fn createFunctionMock(def: (list, map), members?: map)
   #(2) create behavior
   var behavior
 
-  if def is not list then #map
-    behavior = PositionBasedBehavior()
-    behavior.addResponse(def{*,default=true})
-  else  #list
+  if def is list then
     #determine kind of behavior
     var Behavior = PositionBasedBehavior
 
@@ -74,6 +72,12 @@ fn createFunctionMock(def: (list, map), members?: map)
     #add responses to behavior
     for each resp in def do
       behavior.addResponse(resp)
+  else if def is map then
+    behavior = PositionBasedBehavior()
+    behavior.addResponse(def{*,default=true})
+  else
+    behavior = PositionBasedBehavior()
+    behavior.addResponse(default = true, returns = nil)
 
   #(3) return mock
   const mock = Mock(callBehavior = behavior, members)

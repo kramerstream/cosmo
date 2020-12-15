@@ -189,6 +189,10 @@ A **function mock** is a mock for a function.
 This is defined with the `mock.fun()` function:
 
 ```javascript
+//returning always null
+mock.fun(): function
+
+//returning attending to given behavior/responses
 mock.fun(behavior: object[]|object): function
 ```
 
@@ -319,7 +323,13 @@ The fields can have position-based behaviors if needed, defined as seen with `mo
 #### Special fields
 
 ```javascript
-mock.field.uuid()   //similar to: mock.field({default: true, invokes: uuid.v4})
-mock.field.list()   //similar to: mock.field({default: true, invokes: () => []})
-mock.field.map()    //similar to: mock.field({default: true, invokes: () => ({})})
+mock.field.uuid()         //similar to: mock.field({default: true, returns: uuid.v4()})
+mock.field.list(returns)  //similar to: mock.field({default: true, returns: returns ?? []})
+mock.field.map(returns)   //similar to: mock.field({default: true, returns: returns ?? {}})
+mock.field.text(returns)  //similar to: mock.field({default: true, returns: "text to return"})
+mock.field.bool(returns)  //similar to: mock.field({default: true, returns: true|false})
+mock.field.any(returns)   //similar to: mock.field({default: true, returns: value})
 ```
+
+**Important**. When a `returns` passed, a clone of the value is used.
+So well, the original value is not modified.

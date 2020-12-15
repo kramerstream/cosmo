@@ -1,0 +1,19 @@
+use (
+  {mock} = alias:doubles
+)
+
+const {field} = mock
+
+/**
+ * Returns a mock for an HttpRequest.
+ */
+export fn httpRequest(opts:> {method: text, url: text, originalUrl?: text, headers?: map, query?: map, params?: map}) = mock({
+  method = field.text(method)
+  url = field.text(url)
+  originalUrl = field.text(originalUrl ?? url)
+  headers = field.map(headers)
+  query = field.map(query)
+  params = field.map(params)
+  if opts.body then body = field.any(opts.body)
+  if opts.rawBody then rawBody = field.any(opts.rawBody)
+})

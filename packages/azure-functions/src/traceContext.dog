@@ -1,0 +1,14 @@
+use (
+  {mock} = alias:doubles
+)
+
+const {field} = mock
+
+/**
+ * Returns a mock for a TraceContext.
+ */
+export fn traceContext() = mock({
+  traceparent = field.text("")
+  tracestate = field.text("")
+  attributes = field.map()
+})

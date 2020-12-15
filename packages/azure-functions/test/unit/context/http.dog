@@ -1,0 +1,67 @@
+use (
+  alias:expected
+  alias:path
+  {context} = ~
+)
+
+export suite(__filename, proc()
+  const (
+    functionName = "http"
+    functionDirectory = path.join(__dirname, $"../../data/${functionName}")
+  )
+
+  test("when mock created w/o req, mock must create req", proc()
+    #(1) act
+    const m = context(url = "http://localhost:8080/api/my/endpoint", functionDirectory, functionName)
+
+    #(2) assert
+    expected(m).member("invocationId").toBeUuid()
+    expected(m.executionContext).toHave(functionName=, functionDirectory).member("invocationId").toBeUuid()
+    expected(m).member("bindings").toBeMap().member("bindingData").toBeMap()
+    expected(m.traceContext).member("attributes").toBeMap()
+    expected(m.log).toBeFn()
+    expected(m.done).toBeFn()
+    expected(m.bindings.req).toHave(method = "GET")
+    expected(m.bindingDefinitions).toBeList().it(0).toHave('type' = "httpTrigger")
+  end)
+
+  test("when mock created w/o req but with req data, mock must create req with this data", proc()
+    #(1) act
+    const m = context(
+      url = "http://localhost:8080/api/my/endpoint"
+      originalUrl = "http://127.0.0.1:8080/api/my/endpoint"
+      headers = {}
+      query = {}
+      params = {}
+      functionDirectory
+      functionName
+    )
+
+    #(2) assert
+    expected(m).member("invocationId").toBeUuid()
+    expected(m.executionContext).toHave(functionName=, functionDirectory).member("invocationId").toBeUuid()
+    expected(m).member("bindings").toBeMap().member("bindingData").toBeMap()
+    expected(m.traceContext).member("attributes").toBeMap()
+    expected(m.log).toBeFn()
+    expected(m.done).toBeFn()
+    expected(m.bindings.req).toHave(method = "GET")
+    expected(m.bindingDefinitions).toBeList().it(0).toHave('type' = "httpTrigger")
+  end)
+
+  test("when mock created w/ req, mock must use passed req", proc()
+    #(1) act
+    const (
+      req = {}
+      res = {}
+      m = context(functionDirectory=, bindings = {}, req, res)
+    )
+
+    #(2) assert
+    expected(m).toHave(req=, res).member("invocationId").toBeUuid()
+    expected(m.executionContext).toHave(functionName=, functionDirectory).member("invocationId").toBeUuid()
+    expected(m).member("bindings").toBeMap().member("bindingData").toBeMap()
+    expected(m.traceContext).member("attributes").toBeMap()
+    expected(m.log).toBeFn()
+    expected(m.done).toBeFn()
+  end)
+end)

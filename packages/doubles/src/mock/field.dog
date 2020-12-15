@@ -20,21 +20,45 @@ export fn field(def: (list, map)) -> behavior
  */
 field.uuid = fn() -> behavior
   behavior = PositionBasedBehavior()
-  behavior.addResponse(default = true, invokes = uuid.v4)
+  behavior.addResponse(default = true, returns = uuid.v4())
+end
+
+/**
+ * Creates a field to return a given text.
+ */
+field.text = fn(returns: text) -> behavior
+  behavior = PositionBasedBehavior()
+  behavior.addResponse(default = true, returns)
+end
+
+/**
+ * Creates a field to return a boolean value.
+ */
+field.bool = fn(returns: bool) -> behavior
+  behavior = PositionBasedBehavior()
+  behavior.addResponse(default = true, returns)
 end
 
 /**
  * Creates a field to return an empty array.
  */
-field.list = fn() -> behavior
+field.list = fn(returns?: list) -> behavior
   behavior = PositionBasedBehavior()
-  behavior.addResponse(default = true, invokes = fn() = [] end)
+  behavior.addResponse(default = true, returns = copy(returns) ?? [])
 end
 
 /**
  * Creates a field to return an empty object.
  */
-field.map = fn() -> behavior
+field.map = fn(returns?: map) -> behavior
   behavior = PositionBasedBehavior()
-  behavior.addResponse(default = true, invokes = fn() = {} end)
+  behavior.addResponse(default = true, returns = copy(returns) ?? {})
+end
+
+/**
+ * Creates a field to return anything.
+ */
+field.any = fn(returns: any) -> behavior
+  behavior = PositionBasedBehavior()
+  behavior.addResponse(default = true, returns = copy(returns))
 end

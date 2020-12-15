@@ -18,7 +18,7 @@ module.exports = exports = suite(__filename, () => {
             const target = {};
             const p = monitor(target);
             expected(p).notToBeSameAs(target);
-            expected(monitor.monitors).toHaveLen(1).it(0, "proxy").toBeSameAs(p);
+            expected(monitor.monitors).toHaveLen(1).get("[0].proxy").toBeSameAs(p);
           }
         });
       }
@@ -54,7 +54,7 @@ module.exports = exports = suite(__filename, () => {
           {
             const p = monitor({});
             monitor.clear((0, _core.proxy)({}, {}));
-            expected(monitor.monitors).toHaveLen(1).it(0, "proxy").toBeSameAs(p);
+            expected(monitor.monitors).toHaveLen(1).get("[0].proxy").toBeSameAs(p);
           }
         });
       }

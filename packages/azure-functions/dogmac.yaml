@@ -1,0 +1,15 @@
+uses:
+  assert:
+    js: assert
+  cron:
+    js: cron-parser
+  doubles:
+    js: @cosmokramer/doubles
+  expected:
+    js: @cosmokramer/expected
+  fs:
+    js: @dogmalang/fs.sync
+  isEqual:
+    js: lodash.isequal
+  path:
+    js: @dogmalang/path

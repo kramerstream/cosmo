@@ -22,6 +22,13 @@ module.exports = exports = suite(__filename, () => {
             }).toRaise(Error("No response available for mock."));
           }
         });
+        test("when procedure mock, the calls must return nil", () => {
+          {
+            const p = mock.fun();
+            expected(p()).toBeNil();
+            expected(p()).toBeNil();
+          }
+        });
         test("when position-based mock, position-based behavior must be used", () => {
           {
             const p = mock.fun([{

@@ -1,0 +1,34 @@
+use (
+  alias:expected
+  {httpRequest} = ~
+)
+
+export suite(__filename, proc()
+  test("when mock created w/o body, mock must not define body", proc()
+    #(1) act
+    const (
+      method = "GET"
+      url = "https://localhost:8080/my/endpoint"
+      originalUrl = "http://localhost:8080/my/endpoint"
+      m = httpRequest(method=, url, originalUrl)
+    )
+
+    #(2) assert
+    expected(m).toHave(method=, url, originalUrl, headers = {}, query = {}, params = {})
+    expected(m).notToHave("body").notToHave("rawBody")
+  end)
+
+  test("when mock created w/ body, mock must define body", proc()
+    #(1) act
+    const (
+      method = "GET"
+      url = "http://localhost:8080/my/endpoint"
+      body = {}
+      rawBody = {}
+      m = httpRequest(method=, url, body, rawBody)
+    )
+
+    #(2) assert
+    expected(m).toHave(method=, url, originalUrl=url, headers = {}, query = {}, params = {}, body, rawBody)
+  end)
+end)

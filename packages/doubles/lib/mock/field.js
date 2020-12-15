@@ -36,39 +36,89 @@ field.uuid = () => {
     behavior = PositionBasedBehavior();
     behavior.addResponse({
       'default': true,
-      'invokes': uuid.v4
+      'returns': uuid.v4()
     });
   }
   return behavior;
 };
 
-field.list = () => {
+field.text = returns => {
   let behavior;
+  /* istanbul ignore next */
+
+  _core.dogma.expect("returns", returns, _core.text);
+
   {
     behavior = PositionBasedBehavior();
     behavior.addResponse({
       'default': true,
-      'invokes': () => {
-        {
-          return [];
-        }
-      }
+      'returns': returns
     });
   }
   return behavior;
 };
 
-field.map = () => {
+field.bool = returns => {
   let behavior;
+  /* istanbul ignore next */
+
+  _core.dogma.expect("returns", returns, _core.bool);
+
   {
     behavior = PositionBasedBehavior();
     behavior.addResponse({
       'default': true,
-      'invokes': () => {
-        {
-          return {};
-        }
-      }
+      'returns': returns
+    });
+  }
+  return behavior;
+};
+
+field.list = returns => {
+  let behavior;
+  /* istanbul ignore next */
+
+  if (returns != null) _core.dogma.expect("returns", returns, _core.list);
+  {
+    var _dogma$copy;
+
+    behavior = PositionBasedBehavior();
+    behavior.addResponse({
+      'default': true,
+      'returns': (_dogma$copy = _core.dogma.copy(returns)) !== null && _dogma$copy !== void 0 ? _dogma$copy : []
+    });
+  }
+  return behavior;
+};
+
+field.map = returns => {
+  let behavior;
+  /* istanbul ignore next */
+
+  if (returns != null) _core.dogma.expect("returns", returns, _core.map);
+  {
+    var _dogma$copy2;
+
+    behavior = PositionBasedBehavior();
+    behavior.addResponse({
+      'default': true,
+      'returns': (_dogma$copy2 = _core.dogma.copy(returns)) !== null && _dogma$copy2 !== void 0 ? _dogma$copy2 : {}
+    });
+  }
+  return behavior;
+};
+
+field.any = returns => {
+  let behavior;
+  /* istanbul ignore next */
+
+  _core.dogma.expect("returns", returns, _core.any);
+
+  {
+    behavior = PositionBasedBehavior();
+    behavior.addResponse({
+      'default': true,
+      'returns': _core.dogma.copy(returns)
     });
   }
   return behavior;

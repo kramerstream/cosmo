@@ -1,0 +1,20 @@
+use (
+  alias:expected
+  {v4 as uuid} = pkg:uuid
+  ~/lib/executionContext
+)
+
+export suite(__filename, proc()
+  test("when created, mock must work", proc()
+    #(1) act
+    const (
+      invocationId = uuid()
+      functionName = "myfn"
+      functionDirectory = "/my/dir"
+      m = executionContext(invocationId=, functionName, functionDirectory)
+    )
+
+    #(2) assert
+    expected(m).toHave(invocationId=, functionName, functionDirectory)
+  end)
+end)

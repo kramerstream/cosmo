@@ -1,0 +1,32 @@
+use (
+  {assert} = pkg:chai
+  expected = ~
+)
+
+export suite(__filename, proc()
+  test("when item found, item wrapper with original value must be returned", proc()
+    #(1) act
+    const (
+      value = [11, 22, 33]
+      w = expected(value).it(1)
+    )
+
+    #(2) assert
+    assert.strictEqual(w.originalValue, value)
+    assert.equal(w.value, 22)
+    assert.strictEqual(w.toBeEqualTo(22), w)
+  end)
+
+  test("when item not found, nil wrapper with original value must be returned", proc()
+    #(1) act
+    const (
+      value = [11, 22, 33]
+      w = expected(value).it(10)
+    )
+
+    #(2) assert
+    assert.strictEqual(w.originalValue, value)
+    assert.equal(w.value, nil)
+    assert.strictEqual(w.toBeNil(), w)
+  end)
+end)

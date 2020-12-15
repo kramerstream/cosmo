@@ -1,0 +1,13 @@
+use (
+  alias:expected
+  api = ~
+)
+
+export suite(__filename, proc()
+  test("api must export functions", proc()
+    expected(api).member("context").toBeFn()\
+                 .member("httpRequest").toBeFn()\
+                 .member("httpResponse").toBeFn()\
+                 .member("timer").toBeFn()
+  end)
+end)

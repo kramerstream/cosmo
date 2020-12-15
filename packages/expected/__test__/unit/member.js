@@ -10,49 +10,26 @@ const expected = _core.dogma.use(require("../.."));
 
 module.exports = exports = suite(__filename, () => {
   {
-    test("when non-nested member, value wrapper with original value must be returned", () => {
+    test("when member found, value wrapper with original value must be returned", () => {
       {
         const value = {
           ["x"]: 11,
-          ["y"]: 22
+          ["y"]: 22,
+          ["z"]: 33
         };
-        const w = expected(value).member("x");
+        const w = expected(value).member("y");
         assert.strictEqual(w.originalValue, value);
-        assert.equal(w.value, 11);
-        assert.strictEqual(w.toBeEqualTo(11), w);
+        assert.equal(w.value, 22);
+        assert.strictEqual(w.toBeEqualTo(22), w);
       }
     });
-    suite("when nested member", () => {
+    test("when member not found, nil wrapper with original value must be returned", () => {
       {
-        test("when nested member, value wrapper with original value must be returned", () => {
-          {
-            const value = {
-              ["a"]: {
-                ["x"]: 11,
-                ["y"]: 22
-              }
-            };
-            const w = expected(value).member("a", "x");
-            assert.strictEqual(w.originalValue, value);
-            assert.equal(w.value, 11);
-            assert.strictEqual(w.toBeEqualTo(11), w);
-          }
-        });
-        test("when nested member and member() twice, value wrapper with original value must be returned", () => {
-          {
-            const value = {
-              ["a"]: {
-                ["x"]: 11,
-                ["y"]: 22
-              },
-              ["b"]: 12
-            };
-            const w = expected(value).member("a", "x").member("b");
-            assert.strictEqual(w.originalValue, value);
-            assert.equal(w.value, 12);
-            assert.strictEqual(w.toBeEqualTo(12), w);
-          }
-        });
+        const value = {};
+        const w = expected(value).member("a");
+        assert.strictEqual(w.originalValue, value);
+        assert.equal(w.value, null);
+        assert.strictEqual(w.toBeNil(), w);
       }
     });
   }

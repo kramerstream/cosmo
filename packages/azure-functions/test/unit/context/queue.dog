@@ -1,0 +1,27 @@
+use (
+  alias:expected
+  alias:path
+  {context} = ~
+)
+
+export suite(__filename, proc()
+  const (
+    functionName = "queue"
+    functionDirectory = path.join(__dirname, $"../../data/${functionName}")
+    item = {x = 123, y = 321}
+  )
+
+  test("when mock created, mock must be created", proc()
+    #(1) act
+    const m = context(functionDirectory=, item)
+
+    #(2) assert
+    expected(m).member("invocationId").toBeUuid()
+    expected(m.executionContext).toHave(functionName=, functionDirectory).member("invocationId").toBeUuid()
+    expected(m).member("bindings").toBeMap().member("bindingData").toBeMap()
+    expected(m.traceContext).member("attributes").toBeMap()
+    expected(m.log).toBeFn()
+    expected(m.done).toBeFn()
+    expected(m.bindingDefinitions).toBeList().it(0).toHave('type' = "queueTrigger")
+  end)
+end)

@@ -1,0 +1,20 @@
+use (
+  alias:expected
+  ~/lib/logger
+)
+
+export suite(__filename, proc()
+  test("when mock created, mock must work", proc()
+    #(1) act
+    const m = logger()
+
+    #(2) assert
+    expected(m).toBeCallable()
+    expected(m()).toBeNil()
+    expected(m()).toBeNil()
+    expected(m.error()).toBeNil()
+    expected(m.warn()).toBeNil()
+    expected(m.info()).toBeNil()
+    expected(m.verbose()).toBeNil()
+  end)
+end)

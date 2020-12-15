@@ -17,9 +17,6 @@ module.exports = exports = suite(__filename, () => {
     test("when well-defined, object mock must be returned", () => {
       {
         const o = mock({
-          ["a"]: field.uuid(),
-          ["b"]: field.list(),
-          ["c"]: field.map(),
           ["x"]: field([{
             ["returns"]: 1234
           }, {
@@ -30,13 +27,9 @@ module.exports = exports = suite(__filename, () => {
           })
         });
         expected(o).notToBeCallable();
-        expected(o.a).toBeUuid();
-        expected(o.b).toBeList().toBeEmpty();
-        expected(o.c).toBeMap().toBeEmpty();
         expected(o.x).toBeEqualTo(1234);
         expected(o.y()).toBeEqualTo(12345678);
         expected(o.y()).toBeEqualTo(12345678);
-        expected(o.a).toBeUuid();
         expected(o.x).toBeEqualTo(4321);
       }
     });
@@ -59,7 +52,7 @@ module.exports = exports = suite(__filename, () => {
               'x': "invalid value"
             });
           }
-        }).toRaise(TypeError("Member x must be field mock or function mock."));
+        }).toRaise(TypeError("Member 'x' must be map, field mock or function mock."));
       }
     });
   }

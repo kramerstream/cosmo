@@ -1,0 +1,16 @@
+use (
+  alias:expected
+  alias:path
+  {context} = ~
+)
+
+export suite(__filename, proc()
+  const (
+    functionName = "eventHub"
+    functionDirectory = path.join(__dirname, $"../../data/${functionName}")
+  )
+
+  test("when unsupported trigger, error must be raised", proc()
+    expected(proc() context(functionDirectory=) end).toRaise(Error("Unsupported trigger: eventHubTrigger."))
+  end)
+end)

@@ -1,0 +1,11 @@
+use (
+  alias:expected
+  {httpResponse} = ~
+)
+
+export suite(__filename, proc()
+  test("when mock created, mock must work", proc()
+    const m = httpResponse()
+    expected(m).toHave(headers = {}, cookies = {})
+  end)
+end)

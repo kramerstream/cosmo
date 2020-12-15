@@ -1,5 +1,6 @@
 use (
   alias:assert
+  alias:get
   pkg:uuid
 )
 
@@ -17,7 +18,7 @@ export struct ValueWrapper
   /**
    * The original object, used when a wrapped created mem() from other wrapper.
    */
-  @hidden
+  @hidden @inject
   pub const originalValue?
 
   /**
@@ -27,17 +28,24 @@ export struct ValueWrapper
   pub const fulfilled?: bool
 
   /**
-   * Returns a wrapper for a [member] of the wrapped value.
+   * Returns a wrapper for an item of a list.
    */
-  @alias("it")
-  pub fn member(...args): Self
-    var (
-      root ::= self.originalValue ?? value
-      it = root
+  pub fn it(i: num) = self.get($"[${i}]")
+
+  /**
+   * Returns a wrapper for the value of a member.
+   */
+  pub fn member(name: text) = self.get(name)
+
+  /**
+   * Returns a wrapper for a value returned by [exp]ression on the wrapped value.
+   */
+  pub fn get(exp: (text, num))
+    const (
+      root = originalValue ?? value
     )
 
-    for each i in args do it = it[i]
-    return Self(value = it, originalValue = root)
+    return Self(value = get(root, exp), originalValue = root)
 
   /**
    * Check whether the value raises a given [error].
@@ -465,7 +473,7 @@ export struct ValueWrapper
    */
   pub fn toBeUuid() -> self
     if not uuid.validate(value) then
-      throw("${value} should be a valid UUID.")
+      throw($"${value} should be a valid UUID.")
 
 /**
  * Check whether two arrays are similar, that is, the same items in any order.

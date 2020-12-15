@@ -1,0 +1,14 @@
+use (
+  {mock} = alias:doubles
+)
+
+const {fun, field} = mock
+
+/**
+ * Returns a mock for an HttpResponse.
+ */
+export fn httpResponse() = mock({
+  headers = field.map()
+  cookies = field.map()
+  send = fun()
+})
