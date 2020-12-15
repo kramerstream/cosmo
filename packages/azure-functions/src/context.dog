@@ -18,17 +18,24 @@ const {fun, field} = mock
  *
  * We have to set, mandatorily, [functionDirectory].
  */
-export fn context(opts:> {functionDirectory: text}) -> m
+export fn context(opts:> {functionDirectory: text, functionName?: text, bindings?: map}) -> m
   #(1) prepare
   const (
     bindingDefinitions = use(path.join(functionDirectory, "function.json")).bindings
     trigger = bindingDefinitions[0]
   )
 
+  functionName ?= path.name(functionDirectory)
+  bindings ?= {}
+
   #(2) create monitor attending to trigger
-  with trigger.type do
-    if "httpTrigger" then m = createHttpTriggerContext(opts{*,trigger,bindingDefinitions})
-    if "timerTrigger" then m = createTimerTriggerContext(opts{*,trigger,bindingDefinitions})
+  opts = opts{*,trigger,bindingDefinitions,functionName,bindings}
+
+  with kind ::= trigger.type do
+    if "httpTrigger" then m = createHttpTriggerContext(opts)
+    if "queueTrigger" then m = createQueueTriggerContext(opts)
+    if "timerTrigger" then m = createTimerTriggerContext(opts)
+    else throw(Error($"Unsupported trigger: ${kind}."))
 
 /**
  * Returns a context for an HTTP [trigger], needing: [functionDirectory], [url] if [req] not passed
@@ -38,8 +45,6 @@ export fn context(opts:> {functionDirectory: text}) -> m
  */
 fn createHttpTriggerContext(opts:> {trigger: map, functionDirectory: text, functionName?: text, bindingDefinitions: map[], bindings?: map, req?, res?})
   #(1) pre: arguments
-  functionName ?= path.name(functionDirectory)
-  bindings ?= {}
   req ?= httpRequest(
     method = trigger.methods[0].toUpperCase()
     url = expect(opts.url, text)
@@ -76,14 +81,33 @@ fn createHttpTriggerContext(opts:> {trigger: map, functionDirectory: text, funct
  */
 fn createTimerTriggerContext(opts:> {trigger: map, functionDirectory: text, functionName?: text, bindingDefinitions: map[], bindings?: map, timer?})
   #(1) pre: arguments
-  functionName ?= path.name(functionDirectory)
-  bindings ?= {}
   timer ?= timerMock(schedule = trigger.schedule)
 
   #(2) set input bindings
   bindings[trigger.name] = timer
 
   #(3) create mock
+  const invocationId = uuid()
+
+  return mock({
+    invocationId = field.text(invocationId)
+    executionContext = executionContext(invocationId=, functionName, functionDirectory)
+    traceContext = traceContext()
+    bindings
+    bindingData = field.map()
+    bindingDefinitions = field.list(bindingDefinitions)
+    log = logger()
+    done = fun()
+  })
+
+/**
+ * Creates a queue-trigger context.
+ */
+fn createQueueTriggerContext(opts:> {trigger: map, functionDirectory: text, functionName?: text, bindingDefinitions: map[], bindings?: map, item})
+  #(1) set input bindings
+  bindings[trigger.name] = item
+
+  #(2) create mock
   const invocationId = uuid()
 
   return mock({

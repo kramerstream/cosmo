@@ -42,6 +42,18 @@ const ctx = context({
 })
 ```
 
+### Queue trigger context
+
+```javascript
+const {context} = require("@cosmokramer/azure-functions");
+const ctx = context({
+  functionDirectory: "local dir where function defined",  //mandatory
+  functionName: "the function name",                      //optional; if unset, dir name used
+  bindings: {},                                           //optional
+  item: {/*...*/}                                         //mandatory
+})
+```
+
 ### Timer trigger context
 
 ```javascript
