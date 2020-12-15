@@ -16,7 +16,10 @@ const {fun, field} = mock
 /**
  * Returns a mock for a Context.
  *
- * We have to set, mandatorily, [functionDirectory].
+ * The [functionDirectory] must be the real directory where the function is defined,
+ * due to its function.json file is used for creating the context mock.
+ *
+ * When unsupported trigger, an error is raised.
  */
 export fn context(opts:> {functionDirectory: text, functionName?: text, bindings?: map}) -> m
   #(1) prepare
@@ -55,6 +58,7 @@ fn createHttpTriggerContext(opts:> {trigger: map, functionDirectory: text, funct
     body = opts.body
     rawBody = opts.rawBody
   )
+
   res ?= httpResponse()
 
   #(2) set input bindings
@@ -78,6 +82,8 @@ fn createHttpTriggerContext(opts:> {trigger: map, functionDirectory: text, funct
 
 /**
  * Creates a timer-trigger context.
+ *
+ * If timer not passed, one is created and saved in bindings.
  */
 fn createTimerTriggerContext(opts:> {trigger: map, functionDirectory: text, functionName?: text, bindingDefinitions: map[], bindings?: map, timer?})
   #(1) pre: arguments
@@ -102,6 +108,8 @@ fn createTimerTriggerContext(opts:> {trigger: map, functionDirectory: text, func
 
 /**
  * Creates a queue-trigger context.
+ *
+ * The [item] passed will be saved in [bindings].
  */
 fn createQueueTriggerContext(opts:> {trigger: map, functionDirectory: text, functionName?: text, bindingDefinitions: map[], bindings?: map, item})
   #(1) set input bindings
