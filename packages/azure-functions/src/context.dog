@@ -7,76 +7,85 @@ use (
   executionContext
   traceContext
   logger
+  httpRequest
+  httpResponse
 )
 
 const {fun, field} = mock
 
 /**
  * Returns a mock for a Context.
+ *
  * We have to set, mandatorily, [functionDirectory].
  */
-export fn context(opts:> {functionDirectory: text, functionName?: text}) -> m
+export fn context(opts:> {functionDirectory: text}) -> m
   #(1) prepare
   const (
-    invocationId = uuid()
     bindingDefinitions = use(path.join(functionDirectory, "function.json")).bindings
     trigger = bindingDefinitions[0]
   )
 
-  functionName ?= path.name(functionDirectory)
-
   #(2) create monitor attending to trigger
   with trigger.type do
-    if "httpTrigger" then m = createHttpTriggerContext(opts{*,functionName,invocationId,bindingDefinitions})
-    if "timerTrigger" then m = createTimerTriggerContext(opts{*,functionName,invocationId,bindingDefinitions})
+    if "httpTrigger" then m = createHttpTriggerContext(opts{*,trigger,bindingDefinitions})
+    if "timerTrigger" then m = createTimerTriggerContext(opts{*,trigger,bindingDefinitions})
 
 /**
- * Returns an HTTP-trigger context.
+ * Returns a context for an HTTP [trigger], needing: [functionDirectory], [url] if [req] not passed
+ *
+ * The [functionName] can be passed or this is got from the [functionDirectory].
+ * The [req] can be passed or this is created from the [trigger] definition.
  */
-fn createHttpTriggerContext(opts:> {invocationId: text, functionName: text, functionDirectory: text, bindings?: map, bindingDefinitions: map[], req?})
-  #(1) prepare
-  const trigger = bindingDefinitions[0]
+fn createHttpTriggerContext(opts:> {trigger: map, functionDirectory: text, functionName?: text, bindingDefinitions: map[], bindings?: map, req?, res?})
+  #(1) pre: arguments
+  functionName ?= path.name(functionDirectory)
+  bindings ?= {}
+  req ?= httpRequest(
+    method = trigger.methods[0].toUpperCase()
+    url = expect(opts.url, text)
+    originalUrl = opts.originalUrl ?? opts.url
+    headers = opts.headers ?? {}
+    query = opts.query ?? {}
+    params = opts.params ?? {}
+    body = opts.body
+    rawBody = opts.rawBody
+  )
+  res ?= httpResponse()
 
-  if not bindings and req then
-    bindings ?= {
-     [trigger.name] =
-       method = req.method
-       url = req.url
-       originalUrl = req.originalUrl
-       headeres = req.headers
-       query = req.query
-       params = req.params
-       body = req.body
-       rawBody = req.rawBody
-    }
+  #(2) set input bindings
+  bindings[trigger.name] = req
 
-  #(2) create mock
+  #(3) create mock
+  const invocationId = uuid()
+
   return mock({
-   invocationId = field.text(invocationId)
-   executionContext = executionContext(invocationId=, functionName, functionDirectory)
-   traceContext = traceContext()
-   bindings = field.map(bindings)
-   bindingData = field.map()
-   bindingDefinitions = field.list(bindingDefinitions)
-   log = logger()
-   done = fun()
-   if req then req
-   if opts.res then res = opts.res
+    invocationId = field.text(invocationId)
+    executionContext = executionContext(invocationId=, functionName, functionDirectory)
+    traceContext = traceContext()
+    bindings
+    bindingData = field.map()
+    bindingDefinitions = field.list(bindingDefinitions)
+    log = logger()
+    done = fun()
+    req
+    res
   })
 
 /**
  * Creates a timer-trigger context.
  */
-fn createTimerTriggerContext(opts:> {invocationId: text, functionName: text, functionDirectory: text, bindingDefinitions: map[], bindings?: map, timer?})
-  const (
-    trigger = bindingDefinitions[0]
-  )
-
-  #(1) get the timer data
+fn createTimerTriggerContext(opts:> {trigger: map, functionDirectory: text, functionName?: text, bindingDefinitions: map[], bindings?: map, timer?})
+  #(1) pre: arguments
+  functionName ?= path.name(functionDirectory)
   bindings ?= {}
-  bindings[trigger.name] = if timer is map then timer else timerMock(schedule = trigger.schedule) end
+  timer ?= timerMock(schedule = trigger.schedule)
 
-  #(2) create mock
+  #(2) set input bindings
+  bindings[trigger.name] = timer
+
+  #(3) create mock
+  const invocationId = uuid()
+
   return mock({
     invocationId = field.text(invocationId)
     executionContext = executionContext(invocationId=, functionName, functionDirectory)

@@ -12,11 +12,11 @@ export suite(__filename, proc()
 
   test("when mock created w/o timer, timer must be create", proc()
     #(1) act
-    const m = context(functionDirectory=)
+    const m = context(functionDirectory=, functionName)
 
     #(2) assert
     expected(m).member("invocationId").toBeUuid()
-    expected(m.executionContext).toHave(functionName=, functionDirectory).member("invocationId").toBeUuid()
+    expected(m.executionContext).toHave(functionDirectory=, functionName).member("invocationId").toBeUuid()
     expected(m.bindings.timer.scheduleStatus).toHave("last", "next", "lastUpdated").member("next").toBeText()
     expected(m.bindings.timer).toBeMap().member("scheduleStatus").toBeMap()
     expected(m.traceContext).member("attributes").toBeMap()

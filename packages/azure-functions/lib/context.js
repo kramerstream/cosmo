@@ -22,6 +22,10 @@ const traceContext = _core.dogma.use(require("./traceContext"));
 
 const logger = _core.dogma.use(require("./logger"));
 
+const httpRequest = _core.dogma.use(require("./httpRequest"));
+
+const httpResponse = _core.dogma.use(require("./httpResponse"));
+
 const {
   fun,
   field
@@ -35,25 +39,17 @@ function context(opts) {
     functionDirectory: {
       optional: false,
       type: _core.text
-    },
-    functionName: {
-      optional: true,
-      type: _core.text
     }
   }));
 
   let {
-    functionDirectory,
-    functionName
+    functionDirectory
   } = opts;
   {
-    const invocationId = uuid();
-
     const bindingDefinitions = _core.dogma.use(require(path.join(functionDirectory, "function.json"))).bindings;
 
     const trigger = _core.dogma.getItem(bindingDefinitions, 0);
 
-    functionName = (0, _core.coalesce)(functionName, path.name(functionDirectory));
     {
       const _ = trigger.type;
 
@@ -61,8 +57,7 @@ function context(opts) {
         case "httpTrigger":
           {
             m = createHttpTriggerContext(_core.dogma.clone(opts, {
-              "functionName": functionName,
-              "invocationId": invocationId,
+              "trigger": trigger,
               "bindingDefinitions": bindingDefinitions
             }, {}, [], []));
           }
@@ -74,8 +69,7 @@ function context(opts) {
         case "timerTrigger":
           {
             m = createTimerTriggerContext(_core.dogma.clone(opts, {
-              "functionName": functionName,
-              "invocationId": invocationId,
+              "trigger": trigger,
               "bindingDefinitions": bindingDefinitions
             }, {}, [], []));
           }
@@ -94,21 +88,17 @@ module.exports = exports = context;
 function createHttpTriggerContext(opts) {
   /* istanbul ignore next */
   _core.dogma.expect("opts", opts, _core.dogma.intf("inline", {
-    invocationId: {
+    trigger: {
       optional: false,
-      type: _core.text
-    },
-    functionName: {
-      optional: false,
-      type: _core.text
+      type: _core.map
     },
     functionDirectory: {
       optional: false,
       type: _core.text
     },
-    bindings: {
+    functionName: {
       optional: true,
-      type: _core.map
+      type: _core.text
     },
     bindingDefinitions: {
       optional: false,
@@ -119,39 +109,50 @@ function createHttpTriggerContext(opts) {
         max: null
       })
     },
+    bindings: {
+      optional: true,
+      type: _core.map
+    },
     req: {
+      optional: true,
+      type: null
+    },
+    res: {
       optional: true,
       type: null
     }
   }));
 
   let {
-    invocationId,
-    functionName,
+    trigger,
     functionDirectory,
-    bindings,
+    functionName,
     bindingDefinitions,
-    req
+    bindings,
+    req,
+    res
   } = opts;
   {
-    const trigger = _core.dogma.getItem(bindingDefinitions, 0);
+    var _functionName, _bindings, _req, _opts$originalUrl, _opts$headers, _opts$query, _opts$params, _res;
 
-    if (!bindings && req) {
-      bindings = (0, _core.coalesce)(bindings, {
-        [trigger.name]: {
-          ["method"]: req.method,
-          ["url"]: req.url,
-          ["originalUrl"]: req.originalUrl,
-          ["headeres"]: req.headers,
-          ["query"]: req.query,
-          ["params"]: req.params,
-          ["body"]: req.body,
-          ["rawBody"]: req.rawBody
-        }
-      });
-    }
+    functionName = (_functionName = functionName) !== null && _functionName !== void 0 ? _functionName : path.name(functionDirectory);
+    bindings = (_bindings = bindings) !== null && _bindings !== void 0 ? _bindings : {};
+    req = (_req = req) !== null && _req !== void 0 ? _req : httpRequest({
+      'method': _core.dogma.getItem(trigger.methods, 0).toUpperCase(),
+      'url': _core.dogma.expect('opts.url', opts.url, _core.text),
+      'originalUrl': (_opts$originalUrl = opts.originalUrl) !== null && _opts$originalUrl !== void 0 ? _opts$originalUrl : opts.url,
+      'headers': (_opts$headers = opts.headers) !== null && _opts$headers !== void 0 ? _opts$headers : {},
+      'query': (_opts$query = opts.query) !== null && _opts$query !== void 0 ? _opts$query : {},
+      'params': (_opts$params = opts.params) !== null && _opts$params !== void 0 ? _opts$params : {},
+      'body': opts.body,
+      'rawBody': opts.rawBody
+    });
+    res = (_res = res) !== null && _res !== void 0 ? _res : httpResponse();
 
-    return mock(Object.assign({}, {
+    _core.dogma.setItem("=", bindings, trigger.name, req);
+
+    const invocationId = uuid();
+    return mock({
       ["invocationId"]: field.text(invocationId),
       ["executionContext"]: executionContext({
         'invocationId': invocationId,
@@ -159,32 +160,30 @@ function createHttpTriggerContext(opts) {
         'functionDirectory': functionDirectory
       }),
       ["traceContext"]: traceContext(),
-      ["bindings"]: field.map(bindings),
+      ["bindings"]: bindings,
       ["bindingData"]: field.map(),
       ["bindingDefinitions"]: field.list(bindingDefinitions),
       ["log"]: logger(),
-      ["done"]: fun()
-    }, req ? {
-      ["req"]: req
-    } : {}, opts.res ? {
-      ["res"]: opts.res
-    } : {}));
+      ["done"]: fun(),
+      ["req"]: req,
+      ["res"]: res
+    });
   }
 }
 
 function createTimerTriggerContext(opts) {
   /* istanbul ignore next */
   _core.dogma.expect("opts", opts, _core.dogma.intf("inline", {
-    invocationId: {
+    trigger: {
+      optional: false,
+      type: _core.map
+    },
+    functionDirectory: {
       optional: false,
       type: _core.text
     },
     functionName: {
-      optional: false,
-      type: _core.text
-    },
-    functionDirectory: {
-      optional: false,
+      optional: true,
       type: _core.text
     },
     bindingDefinitions: {
@@ -207,22 +206,25 @@ function createTimerTriggerContext(opts) {
   }));
 
   let {
-    invocationId,
-    functionName,
+    trigger,
     functionDirectory,
+    functionName,
     bindingDefinitions,
     bindings,
     timer
   } = opts;
   {
-    const trigger = _core.dogma.getItem(bindingDefinitions, 0);
+    var _functionName2, _bindings2, _timer;
 
-    bindings = (0, _core.coalesce)(bindings, {});
-
-    _core.dogma.setItem("=", bindings, trigger.name, _core.dogma.is(timer, _core.map) ? timer : timerMock({
+    functionName = (_functionName2 = functionName) !== null && _functionName2 !== void 0 ? _functionName2 : path.name(functionDirectory);
+    bindings = (_bindings2 = bindings) !== null && _bindings2 !== void 0 ? _bindings2 : {};
+    timer = (_timer = timer) !== null && _timer !== void 0 ? _timer : timerMock({
       'schedule': trigger.schedule
-    }));
+    });
 
+    _core.dogma.setItem("=", bindings, trigger.name, timer);
+
+    const invocationId = uuid();
     return mock({
       ["invocationId"]: field.text(invocationId),
       ["executionContext"]: executionContext({

@@ -1,5 +1,7 @@
 uses:
   assert:
     js: assert
+  get:
+    js: lodash.get
   path:
     js: @dogmalang/path

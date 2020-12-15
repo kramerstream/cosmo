@@ -40,6 +40,8 @@ ArgsBasedBehavior.prototype.getResponse = function (args) {
   _core.dogma.expect("args", args, _core.list);
 
   {
+    var _resp;
+
     for (const r of this.responses) {
       if (isEqual(args, r.args)) {
         resp = r;
@@ -47,7 +49,7 @@ ArgsBasedBehavior.prototype.getResponse = function (args) {
       }
     }
 
-    resp = (0, _core.coalesce)(resp, this.defaultResponse);
+    resp = (_resp = resp) !== null && _resp !== void 0 ? _resp : this.defaultResponse;
   }
   return resp;
 };

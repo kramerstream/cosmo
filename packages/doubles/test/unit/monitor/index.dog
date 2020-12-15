@@ -15,7 +15,7 @@ export suite(__filename, proc()
 
       #(2) assert
       expected(p).notToBeSameAs(target)
-      expected(monitor.monitors).toHaveLen(1).it(0, "proxy").toBeSameAs(p)
+      expected(monitor.monitors).toHaveLen(1).get("[0].proxy").toBeSameAs(p)
     end)
   end)
 
@@ -51,7 +51,7 @@ export suite(__filename, proc()
       monitor.clear(proxy({}, {}))
 
       #(2) assert
-      expected(monitor.monitors).toHaveLen(1).it(0, "proxy").toBeSameAs(p)
+      expected(monitor.monitors).toHaveLen(1).get("[0].proxy").toBeSameAs(p)
     end)
   end)
 end)

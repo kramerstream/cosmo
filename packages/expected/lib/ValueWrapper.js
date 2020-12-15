@@ -4,6 +4,8 @@ var _core = require("@dogmalang/core");
 
 const assert = _core.dogma.use(require("assert"));
 
+const get = _core.dogma.use(require("lodash.get"));
+
 const uuid = _core.dogma.use(require("uuid"));
 
 const $ValueWrapper = class ValueWrapper {
@@ -49,23 +51,50 @@ const ValueWrapper = new Proxy($ValueWrapper, {
 module.exports = exports = ValueWrapper;
 const Self = ValueWrapper;
 
-ValueWrapper.prototype.it = ValueWrapper.prototype.member = function (...args) {
+ValueWrapper.prototype.it = function (i) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
+  /* istanbul ignore next */
+
+  _core.dogma.expect("i", i, _core.num);
+
   {
-    var _this$originalValue;
+    return this.get(`[${i}]`);
+  }
+};
 
-    const root = (_this$originalValue = this.originalValue) !== null && _this$originalValue !== void 0 ? _this$originalValue : value;
-    let it = root;
+ValueWrapper.prototype.member = function (name) {
+  const self = this;
+  const {
+    value,
+    originalValue
+  } = self;
+  /* istanbul ignore next */
 
-    for (const i of args) {
-      it = _core.dogma.getItem(it, i);
-    }
+  _core.dogma.expect("name", name, _core.text);
 
+  {
+    return this.get(name);
+  }
+};
+
+ValueWrapper.prototype.get = function (exp) {
+  const self = this;
+  const {
+    value,
+    originalValue
+  } = self;
+  /* istanbul ignore next */
+
+  _core.dogma.expect("exp", exp, [_core.text, _core.num]);
+
+  {
+    const root = originalValue !== null && originalValue !== void 0 ? originalValue : value;
     return Self({
-      'value': it,
+      'value': get(root, exp),
       'originalValue': root
     });
   }
@@ -74,7 +103,8 @@ ValueWrapper.prototype.it = ValueWrapper.prototype.member = function (...args) {
 ValueWrapper.prototype.toRaise = function (err) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     {
@@ -109,7 +139,8 @@ ValueWrapper.prototype.toRaise = function (err) {
 ValueWrapper.prototype.notToRaise = function (err) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     {
@@ -146,7 +177,8 @@ ValueWrapper.prototype.notToRaise = function (err) {
 ValueWrapper.prototype.toBeInstanceOf = ValueWrapper.prototype.toBe = function (klass) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -163,7 +195,8 @@ ValueWrapper.prototype.toBeInstanceOf = ValueWrapper.prototype.toBe = function (
 ValueWrapper.prototype.notToBeInstanceOf = ValueWrapper.prototype.notToBe = function (klass) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -180,7 +213,8 @@ ValueWrapper.prototype.notToBeInstanceOf = ValueWrapper.prototype.notToBe = func
 ValueWrapper.prototype.toBeNull = ValueWrapper.prototype.toBeNil = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (value != null) {
@@ -193,7 +227,8 @@ ValueWrapper.prototype.toBeNull = ValueWrapper.prototype.toBeNil = function () {
 ValueWrapper.prototype.notToBeNull = ValueWrapper.prototype.notToBeNil = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (value == null) {
@@ -206,7 +241,8 @@ ValueWrapper.prototype.notToBeNull = ValueWrapper.prototype.notToBeNil = functio
 ValueWrapper.prototype.toBeBoolean = ValueWrapper.prototype.toBeBool = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.isNot(value, _core.bool)) {
@@ -219,7 +255,8 @@ ValueWrapper.prototype.toBeBoolean = ValueWrapper.prototype.toBeBool = function 
 ValueWrapper.prototype.notToBeBoolean = ValueWrapper.prototype.notToBeBool = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.is(value, _core.bool)) {
@@ -232,7 +269,8 @@ ValueWrapper.prototype.notToBeBoolean = ValueWrapper.prototype.notToBeBool = fun
 ValueWrapper.prototype.toBeDate = ValueWrapper.prototype.toBeTimestamp = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.isNot(value, _core.timestamp)) {
@@ -245,7 +283,8 @@ ValueWrapper.prototype.toBeDate = ValueWrapper.prototype.toBeTimestamp = functio
 ValueWrapper.prototype.notToBeDate = ValueWrapper.prototype.notToBeTimestamp = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.is(value, _core.timestamp)) {
@@ -258,7 +297,8 @@ ValueWrapper.prototype.notToBeDate = ValueWrapper.prototype.notToBeTimestamp = f
 ValueWrapper.prototype.toBeString = ValueWrapper.prototype.toBeText = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.isNot(value, _core.text)) {
@@ -271,7 +311,8 @@ ValueWrapper.prototype.toBeString = ValueWrapper.prototype.toBeText = function (
 ValueWrapper.prototype.notToBeString = ValueWrapper.prototype.notToBeText = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.is(value, _core.text)) {
@@ -284,7 +325,8 @@ ValueWrapper.prototype.notToBeString = ValueWrapper.prototype.notToBeText = func
 ValueWrapper.prototype.toBeNumber = ValueWrapper.prototype.toBeNum = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.isNot(value, _core.num)) {
@@ -297,7 +339,8 @@ ValueWrapper.prototype.toBeNumber = ValueWrapper.prototype.toBeNum = function ()
 ValueWrapper.prototype.notToBeNumber = ValueWrapper.prototype.notToBeNum = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.is(value, _core.num)) {
@@ -310,7 +353,8 @@ ValueWrapper.prototype.notToBeNumber = ValueWrapper.prototype.notToBeNum = funct
 ValueWrapper.prototype.toBeArray = ValueWrapper.prototype.toBeList = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.isNot(value, _core.list)) {
@@ -323,7 +367,8 @@ ValueWrapper.prototype.toBeArray = ValueWrapper.prototype.toBeList = function ()
 ValueWrapper.prototype.notToBeArray = ValueWrapper.prototype.notToBeList = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.is(value, _core.list)) {
@@ -336,7 +381,8 @@ ValueWrapper.prototype.notToBeArray = ValueWrapper.prototype.notToBeList = funct
 ValueWrapper.prototype.toBeSet = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.isNot(value, _core.set)) {
@@ -349,7 +395,8 @@ ValueWrapper.prototype.toBeSet = function () {
 ValueWrapper.prototype.notToBeSet = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.is(value, _core.set)) {
@@ -362,7 +409,8 @@ ValueWrapper.prototype.notToBeSet = function () {
 ValueWrapper.prototype.toBeObject = ValueWrapper.prototype.toBeMap = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.isNot(value, _core.map)) {
@@ -375,7 +423,8 @@ ValueWrapper.prototype.toBeObject = ValueWrapper.prototype.toBeMap = function ()
 ValueWrapper.prototype.notToBeObject = ValueWrapper.prototype.notToBeMap = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.is(value, _core.map)) {
@@ -388,7 +437,8 @@ ValueWrapper.prototype.notToBeObject = ValueWrapper.prototype.notToBeMap = funct
 ValueWrapper.prototype.toBeFunction = ValueWrapper.prototype.toBeFn = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.isNot(value, _core.func)) {
@@ -401,7 +451,8 @@ ValueWrapper.prototype.toBeFunction = ValueWrapper.prototype.toBeFn = function (
 ValueWrapper.prototype.notToBeFunction = ValueWrapper.prototype.notToBeFn = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.is(value, _core.func)) {
@@ -414,7 +465,8 @@ ValueWrapper.prototype.notToBeFunction = ValueWrapper.prototype.notToBeFn = func
 ValueWrapper.prototype.toBeCallable = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.isNot(value, _core.func)) {
@@ -427,7 +479,8 @@ ValueWrapper.prototype.toBeCallable = function () {
 ValueWrapper.prototype.notToBeCallable = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.is(value, _core.func)) {
@@ -440,7 +493,8 @@ ValueWrapper.prototype.notToBeCallable = function () {
 ValueWrapper.prototype.toBeEqualTo = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if ((0, _core.typename)(value) != (0, _core.typename)(another) || !_core.dogma.getItem(_core.dogma.peval(() => {
@@ -455,7 +509,8 @@ ValueWrapper.prototype.toBeEqualTo = function (another) {
 ValueWrapper.prototype.notToBeEqualTo = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if ((0, _core.typename)(value) == (0, _core.typename)(another) && _core.dogma.getItem(_core.dogma.peval(() => {
@@ -470,7 +525,8 @@ ValueWrapper.prototype.notToBeEqualTo = function (another) {
 ValueWrapper.prototype.toBeSameAs = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (value !== another) {
@@ -483,7 +539,8 @@ ValueWrapper.prototype.toBeSameAs = function (another) {
 ValueWrapper.prototype.notToBeSameAs = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (value === another) {
@@ -496,7 +553,8 @@ ValueWrapper.prototype.notToBeSameAs = function (another) {
 ValueWrapper.prototype.toBeLt = ValueWrapper.prototype.toBeLessThan = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -513,7 +571,8 @@ ValueWrapper.prototype.toBeLt = ValueWrapper.prototype.toBeLessThan = function (
 ValueWrapper.prototype.toBeLe = ValueWrapper.prototype.toBeLessThanOrEqualTo = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -530,7 +589,8 @@ ValueWrapper.prototype.toBeLe = ValueWrapper.prototype.toBeLessThanOrEqualTo = f
 ValueWrapper.prototype.toBeGt = ValueWrapper.prototype.toBeGreaterThan = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -547,7 +607,8 @@ ValueWrapper.prototype.toBeGt = ValueWrapper.prototype.toBeGreaterThan = functio
 ValueWrapper.prototype.toBeGe = ValueWrapper.prototype.toBeGreaterThanOrEqualTo = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -564,7 +625,8 @@ ValueWrapper.prototype.toBeGe = ValueWrapper.prototype.toBeGreaterThanOrEqualTo 
 ValueWrapper.prototype.toBeBetween = function (val1, val2) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if ((0, _core.typename)(value) != (0, _core.typename)(val1) || (0, _core.typename)(value) != (0, _core.typename)(val2) || value < val1 || value > val2) {
@@ -577,7 +639,8 @@ ValueWrapper.prototype.toBeBetween = function (val1, val2) {
 ValueWrapper.prototype.notToBeBetween = function (val1, val2) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if ((0, _core.typename)(value) == (0, _core.typename)(val1) && (0, _core.typename)(value) == (0, _core.typename)(val2) && value >= val1 && value <= val2) {
@@ -590,7 +653,8 @@ ValueWrapper.prototype.notToBeBetween = function (val1, val2) {
 ValueWrapper.prototype.toContain = ValueWrapper.prototype.toInclude = function (item) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     {
@@ -609,7 +673,8 @@ ValueWrapper.prototype.toContain = ValueWrapper.prototype.toInclude = function (
 ValueWrapper.prototype.notToContain = ValueWrapper.prototype.notToInclude = function (item) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     {
@@ -628,7 +693,8 @@ ValueWrapper.prototype.notToContain = ValueWrapper.prototype.notToInclude = func
 ValueWrapper.prototype.toBeIn = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -645,7 +711,8 @@ ValueWrapper.prototype.toBeIn = function (another) {
 ValueWrapper.prototype.notToBeIn = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -662,7 +729,8 @@ ValueWrapper.prototype.notToBeIn = function (another) {
 ValueWrapper.prototype.toHave = function (members) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -701,7 +769,8 @@ ValueWrapper.prototype.toHave = function (members) {
 ValueWrapper.prototype.notToHave = function (members) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -738,7 +807,8 @@ ValueWrapper.prototype.notToHave = function (members) {
 ValueWrapper.prototype.toBeSimilarTo = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -755,7 +825,8 @@ ValueWrapper.prototype.toBeSimilarTo = function (another) {
 ValueWrapper.prototype.notToBeSimilarTo = function (another) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -772,7 +843,8 @@ ValueWrapper.prototype.notToBeSimilarTo = function (another) {
 ValueWrapper.prototype.toBeEmpty = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if ((0, _core.len)(value) != 0) {
@@ -785,7 +857,8 @@ ValueWrapper.prototype.toBeEmpty = function () {
 ValueWrapper.prototype.notToBeEmpty = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (_core.dogma.includes(["bool", "num"], (0, _core.typename)(value)) || (0, _core.len)(value) == 0) {
@@ -798,7 +871,8 @@ ValueWrapper.prototype.notToBeEmpty = function () {
 ValueWrapper.prototype.toHaveLen = ValueWrapper.prototype.toHaveLength = function (size) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -819,7 +893,8 @@ ValueWrapper.prototype.toHaveLen = ValueWrapper.prototype.toHaveLength = functio
 ValueWrapper.prototype.notToHaveLen = ValueWrapper.prototype.notToHaveLength = function (size) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -840,7 +915,8 @@ ValueWrapper.prototype.notToHaveLen = ValueWrapper.prototype.notToHaveLength = f
 ValueWrapper.prototype.toMatch = ValueWrapper.prototype.toBeLike = function (pattern) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -857,7 +933,8 @@ ValueWrapper.prototype.toMatch = ValueWrapper.prototype.toBeLike = function (pat
 ValueWrapper.prototype.notToMatch = ValueWrapper.prototype.notToBeLike = function (pattern) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -874,7 +951,8 @@ ValueWrapper.prototype.notToMatch = ValueWrapper.prototype.notToBeLike = functio
 ValueWrapper.prototype.toStartWith = function (prefix) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -891,7 +969,8 @@ ValueWrapper.prototype.toStartWith = function (prefix) {
 ValueWrapper.prototype.notToStartWith = function (prefix) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -908,7 +987,8 @@ ValueWrapper.prototype.notToStartWith = function (prefix) {
 ValueWrapper.prototype.toEndWith = function (suffix) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -925,7 +1005,8 @@ ValueWrapper.prototype.toEndWith = function (suffix) {
 ValueWrapper.prototype.notToEndWith = function (suffix) {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   /* istanbul ignore next */
 
@@ -942,7 +1023,8 @@ ValueWrapper.prototype.notToEndWith = function (suffix) {
 ValueWrapper.prototype.toHaveBeenFulfilled = ValueWrapper.prototype.toBeFulfilled = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (this.fulfilled !== true) {
@@ -955,7 +1037,8 @@ ValueWrapper.prototype.toHaveBeenFulfilled = ValueWrapper.prototype.toBeFulfille
 ValueWrapper.prototype.toHaveBeenRejected = ValueWrapper.prototype.toBeRejected = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (this.fulfilled !== false) {
@@ -968,7 +1051,8 @@ ValueWrapper.prototype.toHaveBeenRejected = ValueWrapper.prototype.toBeRejected 
 ValueWrapper.prototype.toBeUuid = function () {
   const self = this;
   const {
-    value
+    value,
+    originalValue
   } = self;
   {
     if (!uuid.validate(value)) {

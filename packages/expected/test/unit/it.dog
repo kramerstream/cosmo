@@ -4,11 +4,11 @@ use (
 )
 
 export suite(__filename, proc()
-  test("when member found, value wrapper with original value must be returned", proc()
+  test("when item found, item wrapper with original value must be returned", proc()
     #(1) act
     const (
-      value = {x = 11, y = 22, z = 33}
-      w = expected(value).member("y")
+      value = [11, 22, 33]
+      w = expected(value).it(1)
     )
 
     #(2) assert
@@ -17,11 +17,11 @@ export suite(__filename, proc()
     assert.strictEqual(w.toBeEqualTo(22), w)
   end)
 
-  test("when member not found, nil wrapper with original value must be returned", proc()
+  test("when item not found, nil wrapper with original value must be returned", proc()
     #(1) act
     const (
-      value = {}
-      w = expected(value).member("a")
+      value = [11, 22, 33]
+      w = expected(value).it(10)
     )
 
     #(2) assert

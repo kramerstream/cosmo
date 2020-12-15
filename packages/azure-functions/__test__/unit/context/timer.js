@@ -17,12 +17,13 @@ module.exports = exports = suite(__filename, () => {
     test("when mock created w/o timer, timer must be create", () => {
       {
         const m = context({
-          'functionDirectory': functionDirectory
+          'functionDirectory': functionDirectory,
+          'functionName': functionName
         });
         expected(m).member("invocationId").toBeUuid();
         expected(m.executionContext).toHave({
-          'functionName': functionName,
-          'functionDirectory': functionDirectory
+          'functionDirectory': functionDirectory,
+          'functionName': functionName
         }).member("invocationId").toBeUuid();
         expected(m.bindings.timer.scheduleStatus).toHave("last", "next", "lastUpdated").member("next").toBeText();
         expected(m.bindings.timer).toBeMap().member("scheduleStatus").toBeMap();

@@ -34,11 +34,12 @@ expected(value).toBeLessThan();
 ## Specific members or items
 
 Sometimes, we need to assert multiple members of a source value.
-With the `member()` and `it()` methods, we can get the value for one of its members:
+With the `member()`, `it()` or `get()` methods, we can get the value for one of its members:
 
 ```javascript
-expected(value).member(nameOrIndex)...
-expected(value).it(nameOrIndex)...
+expected(value).member("field")...
+expected(value).it("index")...
+expected(value).get("expression")...
 ```
 
 Examples:
@@ -51,13 +52,11 @@ value = ["zero", "one", "two", "three"];
 expected(value).it(1).toBeEqualTo("one").member(3).toBeEqualTo("three");
 
 value = {x: ["zero", "one", "two", "three"]};
-expected(value).member("x", 1).toBeEqualTo("one").it("x", 2).toBeEqualTo("two");
+expected(value).member("x[1]").toBeEqualTo("one").it("x[2]").toBeEqualTo("two");
 ```
 
-The `member()` method always accesses with respect to the source value passed to `expected()`.
-And the assertions are respect to the last member got with `member()`.
-
-`it()` is an alias for `member()`, generally used with arrays or lists.
+The methods always access with respect to the source value passed to `expected()`.
+And the assertions are respect to the last member got with them.
 
 ## Type assertions
 

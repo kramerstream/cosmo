@@ -12,7 +12,24 @@ Doubles library to simulate **Azure Functions** objects.
 The `context()` function returns a mock for a `Context` instance.
 The context type is determined from the `functionDirectory/function.json` file.
 
-HTTP trigger context:
+### HTTP trigger context
+
+The easy way to create an HTTP context is as follows:
+
+```javascript
+const {context} = require("@cosmokramer/azure-functions");
+const ctx = context({
+  functionDirectory: "local dir where function defined",  //mandatory
+  functionName: "the function name",                      //optional; if unset, dir name used
+  url: "http://...",                                      //mandatory
+  bindings: {}                                            //optional
+})
+```
+
+With this, the request and the response are created from the trigger data.
+Remember that `req` and `res` are available in `context.req` and `context.res`.
+
+When we have already `req` and `res`:
 
 ```javascript
 const {context, httpRequest, httpResponse} = require("@cosmokramer/azure-functions");
@@ -25,7 +42,7 @@ const ctx = context({
 })
 ```
 
-Timer trigger context:
+### Timer trigger context
 
 ```javascript
 const {context, timer} = require("@cosmokramer/azure-functions");
