@@ -1,0 +1,97 @@
+use (
+  ../{DurationSpec, IDurationSpec}
+  ../engines/Engine
+)
+
+/**
+ * A task.
+ */
+@abstract
+export struct Task
+  /**
+   * The engine associated to this task.
+   */
+  @inject
+  pub const engine: Engine
+
+  /**
+   * The parent of this task.
+   */
+  pub const parent?
+
+  /**
+   * The task identifier.
+   */
+  @inject
+  pub const id: text
+
+  /**
+   * The title to show when the task is run.
+   */
+  pub fn title = self:title ?? id
+  intl var title?: text
+
+  /**
+   * The tags associated to this task.
+   */
+  pub const tags: set = set()
+
+  /**
+   * Must it be skipped?
+   */
+  pub fn skippable = self:skippable
+  intl var skippable := true
+
+  /**
+   * The arguments to pass when run.
+   */
+  pub const args?: list
+
+  /**
+   * The duration specification to use.
+   */
+  @strict
+  pub var durationSpec: DurationSpec = self.engine.durationSpec
+
+  /**
+   * Sets if the task must be skipped due to something.
+   */
+  pub fn skip(skippable?: bool) -> self
+    if overload() then self:skippable = true
+    else self:{skippable}
+
+  /**
+   * Add the [only] tag to the task.
+   */
+  pub fn only() -> self
+    self.tags.add("only")
+
+  /**
+   * Call this task with the given [args].
+   */
+  @async
+  pub fn callWith(args: list) = engine.runTask(task, args)
+
+  /**
+   * Sets the duration [spec]ification.
+   * When a number passed, this is the normal duration in ms.
+   */
+  pub fn duration(spec: (IDurationSpec, num)) -> self
+    self.fdurationSpec = if overload(num) then
+      DurationSpec(fast = spec / 2, normal = spec, slow = spec * 2)
+    else
+      DurationSpec(spec)
+    end
+
+  /**
+   * Check whether this task has one or more [tags] of these passed.
+   * This can be overwritten in the taks when needed.
+   */
+  pub fn hasTag(tags: text[]) = self.hasOwnTag(tags)
+
+  /**
+   * Check wether the task has one or more [tags] of these passed, in its tags field.
+   */
+  pub fn hasOwnTag(tags: text[]) -> yep: bool
+    for each tag in tags do
+      if (yep = tag in self.tags) then break

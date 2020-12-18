@@ -1,0 +1,10 @@
+use (
+  Initializer
+)
+
+/**
+ * An initializer for each test into a suite.
+ */
+export struct Setup: Initializer
+  @override
+  pub fn title = "setup(" + super.title + ")"

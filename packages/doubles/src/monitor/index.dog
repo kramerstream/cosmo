@@ -1,8 +1,7 @@
 use (
   Monitor
   Result
-  log/Log
-  log/AccessKind
+  log/{Log, AccessKind}
 )
 
 /**

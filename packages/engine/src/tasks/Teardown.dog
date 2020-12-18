@@ -1,0 +1,10 @@
+use (
+  Finalizer
+)
+
+/**
+ * An finalizer, that is, a task to run after the rest.
+ */
+export struct Teardown: Finalizer
+  @override
+  pub fn title = "teardown(" + super.title + ")"

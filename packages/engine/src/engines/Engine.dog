@@ -1,0 +1,24 @@
+use (
+  ../DurationSpec
+)
+
+/**
+ * A engine to perform the tasks in Cosmo.
+ */
+@abstract
+export struct Engine
+  /**
+   * The engine name.
+   */
+  pub const name: text
+
+  /**
+   * The default duration specification to use when not set in the tasks explicitly.
+   */
+  pub const durationSpec: DurationSpec
+
+  /**
+   * Run a [task] with the given [args], using one of its runners.
+   */
+  @abstract
+  pub fn runTask(task: Task, args: list): any

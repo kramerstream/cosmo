@@ -1,8 +1,6 @@
 use (
   Mock
-  behavior/Behavior
-  behavior/PositionBasedBehavior
-  behavior/ArgsBasedBehavior
+  behavior/{Behavior, PositionBasedBehavior, ArgsBasedBehavior}
   field
 )
 

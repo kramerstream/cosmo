@@ -1,0 +1,10 @@
+use (
+  SimpleTask
+)
+
+/**
+ * An finalizer, that is, a task to run after the rest.
+ */
+export struct Finalizer: SimpleTask
+  @override
+  pub fn title = "fin(" + super.title + ")"

@@ -1,0 +1,28 @@
+use (
+  ../DurationKind
+  ResultKind
+)
+
+/**
+ * A result of a task run.
+ */
+export struct Result
+  /**
+   * The kind of result.
+   */
+  pub const kind: ResultKind
+
+  /**
+   * The value returned or raised, attending to the result kind.
+   */
+  pub const value?
+
+  /**
+   * The duration in ms.
+   */
+  pub const duration: num
+
+  /**
+   * The duration kind.
+   */
+  pub const durationKind: DurationKind

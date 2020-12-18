@@ -1,0 +1,8 @@
+use (
+  SimpleTask
+)
+
+/**
+ * A test act(ion), that is, the function with the action to run when the test called.
+ */
+export struct TestAct: SimpleTask

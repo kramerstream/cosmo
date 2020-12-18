@@ -1,0 +1,21 @@
+use (
+  Engine
+  ../runners/Runner
+  ../tasks/Task
+)
+
+/**
+ * A serial engine, that is, an engine to run step-by-step the tasks
+ */
+export struct SerialEngine: Engine
+  /**
+   * The runner to use.
+   */
+  @inject
+  pub const runner: Runner
+
+  /**
+   * Runs a [task] with the given [args].
+   */
+  @async
+  pub fn runTask(task: Task, args: list) = runner.runTask(task, args, {})

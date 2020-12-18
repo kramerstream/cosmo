@@ -1,0 +1,19 @@
+use (
+  CompositeTask
+  TestAct
+)
+
+/**
+ * A test, that is, a task to test something.
+ */
+export struct Test: CompositeTask
+  /**
+   * The action function.
+   */
+  @strict
+  pub const act = TestAct(
+    engine = _.engine
+    parent = self
+    id = "test action"
+    durationSpec = self.durationSpec
+  )

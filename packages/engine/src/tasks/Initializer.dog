@@ -1,0 +1,10 @@
+use (
+  SimpleTask
+)
+
+/**
+ * An initializer, that is, a task to run before the rest.
+ */
+export struct Initializer: SimpleTask
+  @override
+  pub fn title = "init(" + super.title + ")"

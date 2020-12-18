@@ -1,0 +1,8 @@
+/**
+ * Type of duration.
+ */
+@value
+export enum DurationKind
+  FAST
+  NORMAL
+  SLOW

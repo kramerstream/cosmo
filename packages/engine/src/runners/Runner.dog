@@ -1,0 +1,15 @@
+/**
+ * A runner to run tasks.
+ */
+@abstract
+export struct Runner
+  /**
+   * The runner identifier.
+   */
+  pub const id: text
+
+  /**
+   * Runs a [task] with the given [args], using specific [opts].
+   */
+  @abstract
+  pub fn runTask(task: Task, args: list, opts: map): Result

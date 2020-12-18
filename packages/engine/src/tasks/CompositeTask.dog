@@ -1,0 +1,30 @@
+use (
+  Task
+)
+
+/**
+ * A composite task, that is, a task with multiple steps.
+ */
+@abstract
+export struct CompositeTask: Task
+  /**
+   * The initializers of this task.
+   */
+  @hidden @strict @inject
+  pub const initializers = []
+
+  /**
+   * The finalizers of this task.
+   */
+  @hidden @strict @inject
+  pub const finalizers = []
+
+  /**
+   * Check whether the task has initializers.
+   */
+  pub fn hasInitializers() = len(initializers) > 0
+
+  /**
+   * Check whether the task has finalizers.
+   */
+  pub fn hasFinalizers() = len(finalizers) > 0

@@ -1,0 +1,25 @@
+use (
+  Task
+  Suite
+)
+
+/**
+ * A serial suite, that is, a suite to run step-by-step its associated tasks.
+ */
+export struct SerialSuite: Suite
+  /**
+   * The tasks to run when this is called.
+   */
+  @hidden @strict @inject
+  pub const tasks = []
+
+  @override
+  pub fn addTask(task: Task) -> self
+    #!cov ignore else
+    with type(task) do
+      if Setup then self.setups.push(task)
+      if Initializer then self.initializers.push(task)
+      if Teardown then self.teardowns.push(task)
+      if Finalizer then self.finalizers.push(task)
+      if Suite, Test then self.tasks.push(task)
+      else throw(TypeError($"Invalid type of task for serial suite: ${_}."))

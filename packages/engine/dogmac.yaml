@@ -1,0 +1,7 @@
+uses:
+  assert:
+    js: assert
+  expected:
+    js: @cosmokramer/expected
+  path:
+    js: @dogmalang/path

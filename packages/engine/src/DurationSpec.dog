@@ -1,0 +1,33 @@
+use (
+  DurationKind
+)
+
+/**
+ * A specification of the duration type attending to the duration.
+ */
+export struct DurationSpec
+  /**
+   * Ms to consider a duratation as fast.
+   */
+  @inject
+  pub const fast: num
+
+  /**
+   * Ms to consider a duration as normal.
+   */
+  @inject
+  pub const normal: num
+
+  /**
+   * Ms to consider a duration as slow.
+   */
+  @inject
+  pub const slow: num
+
+  /**
+   * Check a given duration passed in ms.
+   */
+  pub fn getKind(ms: num) -> kind: DurationKind
+    if ms <= fast then kind = DurationKind.FAST
+    else if ms <= normal then kind = DurationKind.NORMAL
+    else kind = DurationKind.SLOW

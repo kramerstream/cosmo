@@ -1,0 +1,80 @@
+{
+  "name": "@cosmokramer/engine",
+  "version": "0.1.0",
+  "description": "Cosmo engine.",
+  "homepage": "http://kramer.stream",
+  "author": {
+    "name": "KramerStream",
+    "email": "hello@kramer.stream",
+    "url": "http://kramer.stream"
+  },
+  "contributors": [
+    {
+      "name": "Raúl G. González",
+      "email": "raulggonzalez@kramer.stream",
+      "url": ""
+    }
+  ],
+  "keywords": [
+    "assert",
+    "test"
+  ],
+  "bugs": {
+    "url": "https://github.com/kramerstream/cosmo/issues",
+    "email": "cosmo@kramer.stream"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kramerstream/cosmo/assert.git"
+  },
+  "preferGlobal": false,
+  "main": "lib/index.js",
+  "files": [
+    "lib/"
+  ],
+  "engines": {
+    "node": ">= 10.19",
+    "npm": ">= 6.14"
+  },
+  "dependencies": {
+    "@dogmalang/core": "^1.0.0-rc12.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12",
+    "@babel/core": "^7.12",
+    "@babel/preset-env": "^7.12",
+    "@cosmokramer/expected": "^0.1.0",
+    "@dogmalang/path": "^0.1.0",
+    "@ethronjs/assert": "^0.1.2",
+    "@ethronpi/babel": "^0.11.0",
+    "@ethronpi/eslint": "^0.1.0",
+    "@ethronpi/exec": "^0.2.0",
+    "@ethronpi/fs": "^0.3.0",
+    "@ethronpi/npm": "^0.3.0",
+    "eslint": "^7.14.0",
+    "nyc": "^15.1.0"
+  },
+  "scripts": {
+    "build": "ethron r build",
+    "test": "ethron r test",
+    "cov": "ethron r build && node_modules/.bin/nyc ethron r test",
+    "pipelines": "node_modules/.bin/nyc ethron r test"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "cache": true,
+    "lines": 100,
+    "branches": 100,
+    "statements": 100,
+    "functions": 100,
+    "exclude": [
+      "**/test/**/*.js",
+      "**/__test__/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ]
+  }
+}

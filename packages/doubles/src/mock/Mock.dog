@@ -1,8 +1,6 @@
 use (
   ../Double
-  behavior/Behavior
-  behavior/Response
-  behavior/Operation
+  behavior/{Behavior, Response, Operation}
 )
 
 /**

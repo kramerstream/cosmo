@@ -1,0 +1,36 @@
+use (
+  CompositeTask
+)
+
+/**
+ * A test suite, that is, a collection of tests and other suites.
+ */
+@abstract
+export struct Suite: CompositeTask
+  /**
+   * The setups to run with each child test of this suite.
+   */
+  @hidden @strict @inject
+  pub const setups = []
+
+  /**
+   * The teardowns to run with each child test of this suite.
+   */
+  @hidden @strict @inject
+  pub const teardowns = []
+
+  /**
+   * Check whether this has setups.
+   */
+  pub fn hasSetups() = len(setups) > 0
+
+  /**
+   * Check whether this has teardowns.
+   */
+  pub fn hasTeardowns() = len(teardowns) > 0
+
+  /**
+   * Add a [task] to this suite.
+   */
+  @abstract
+  pub fn addTask(task: Task) -> self

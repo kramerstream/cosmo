@@ -1,0 +1,24 @@
+use (
+  Suite
+)
+
+/**
+ * A parallel suite, that is, a suite to run its tests concurrently.
+ */
+export struct ParallelSuite: Suite
+  /**
+   * The test to run when this suite called.
+   */
+  @hidden @strict @inject
+  pub const tasks = []
+
+  @override
+  pub fn addTask(task: Task) -> self
+    #!cov ignore else
+    with type(task) do
+      if Setup then self.setups.push(task)
+      if Initializer then self.initializers.push(task)
+      if Teardown then self.teardowns.push(task)
+      if Finalizer then self.finalizers.push(task)
+      if Test then self.task.push(task)
+      else throw(TypeError($"Invalid type of task for parallel suite: ${_}."))

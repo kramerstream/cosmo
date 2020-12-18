@@ -1,0 +1,13 @@
+use (
+  Task
+)
+
+/**
+ * A simple task, that is, a task with only one action.
+ */
+@abstract
+export struct SimpleTask: Task
+  /**
+   * The action to run when called.
+   */
+  pub const action: func

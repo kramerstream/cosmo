@@ -1,0 +1,7 @@
+/**
+ * The types of task call result.
+ */
+export enum ResultKind
+  OK
+  FAILED
+  SKIPPED

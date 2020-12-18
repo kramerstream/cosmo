@@ -1,0 +1,7 @@
+/**
+ * Description of a duration specification when set by the tasks.
+ */
+export intf IDurationSpec
+  fast: num
+  normal: num
+  slow: num

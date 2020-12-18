@@ -1,0 +1,33 @@
+use (
+  ../tasks/{Task, SimpleTask, Initializer, Setup, Finalizer, Teardown, TestAct, Suite, Test}
+  Runner
+)
+
+/**
+ * A runner of unit or integration tests.
+ */
+export struct CosmoRunner: Runner
+  @override
+  pub async fn runTask(task: Task, args: list, opts: map) -> result: Result
+    #!cov ignore else
+    with type(task) do
+      if Initializer, Finalizer then result = await(self.runSimpleTask(task, args, opts))
+      if Suite then result = await(self.runSuite(task, args, opts))
+      if Test then result = await(self.runTest(task, args, opts))
+      else throw(TypeError($"Unknown task for Cosmo runner: ${_}."))
+
+  /**
+   * Run a simple [task] with the given [args] and [opts].
+   */
+  @hidden
+  pub async fn runSimpleTask(task: SimpleTask, args: list, opts: map) -> result: Result
+    const (
+      {action} = task
+    )
+
+    result = await(action(args))
+  catch e
+    result = Result(
+      value = e
+      kind = ResultKind.FAILED
+    )
