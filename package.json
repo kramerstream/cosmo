@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "@dogmalang/core": "^1.0.0-rc12.0",
+    "@dogmalang/core": "^1.0.0-rc13.0",
     "lerna": "^3.22.1"
   },
   "scripts": {
